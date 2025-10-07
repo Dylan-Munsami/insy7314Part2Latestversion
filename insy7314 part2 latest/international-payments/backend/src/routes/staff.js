@@ -1,8 +1,12 @@
+// backend/src/routes/staff.js
 import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { pool } from "../db/db.js";
 import { verifyToken } from "../middleware/auth.js";
+import requireStaff from "../middleware/requireStaff.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 const router = express.Router();
 
@@ -23,26 +27,29 @@ router.post("/login", async (req, res) => {
 
     res.json({ message: "Staff login successful", token });
   } catch (err) {
+    console.error("Staff login error:", err);
     res.status(500).json({ message: "Error logging in", error: err.message });
   }
 });
 
-// Staff view all payments
-router.get("/payments", verifyToken, async (req, res) => {
+// Staff view all payments (staff-only)
+router.get("/payments", verifyToken, requireStaff, async (req, res) => {
   try {
     const payments = await pool.query("SELECT * FROM payments ORDER BY created_at DESC");
     res.json(payments.rows);
   } catch (err) {
+    console.error("Fetch payments error:", err);
     res.status(500).json({ message: "Error fetching payments", error: err.message });
   }
 });
 
-// Staff verify and forward
-router.post("/verify/:id", verifyToken, async (req, res) => {
+// Staff verify and forward (staff-only)
+router.post("/verify/:id", verifyToken, requireStaff, async (req, res) => {
   try {
     await pool.query("UPDATE payments SET verified=true WHERE id=$1", [req.params.id]);
     res.json({ message: "Payment verified and sent to SWIFT" });
   } catch (err) {
+    console.error("Verify payment error:", err);
     res.status(500).json({ message: "Error verifying payment", error: err.message });
   }
 });

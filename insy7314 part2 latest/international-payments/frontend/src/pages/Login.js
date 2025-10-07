@@ -7,7 +7,8 @@ function Login() {
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,12 +22,13 @@ function Login() {
   };
 
   return (
-    <div>
+    <div className="form-card">
       <h2>Login</h2>
-      {message && <p>{message}</p>}
+      {message && <p className="error">{message}</p>}
+
       <form onSubmit={handleSubmit}>
-        <input name="account_number" placeholder="Account Number" value={form.account_number} onChange={handleChange} required />
-        <input name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} required />
+        <input name="account_number" placeholder="Account Number" onChange={handleChange} required />
+        <input type="password" name="password" placeholder="Password" onChange={handleChange} required />
         <button type="submit">Login</button>
       </form>
     </div>

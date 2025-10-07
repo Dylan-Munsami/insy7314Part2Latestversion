@@ -1,4 +1,8 @@
+// backend/src/db/initDB.js
 import { pool } from "./db.js";
+import bcrypt from "bcrypt";
+import dotenv from "dotenv";
+dotenv.config();
 
 export async function initDB() {
   const schema = `
@@ -33,7 +37,26 @@ export async function initDB() {
   try {
     await pool.query(schema);
     console.log("✅ Database initialized successfully");
+
+    // Seed staff user if not exists
+    const staffUsername = process.env.SEED_STAFF_USERNAME || "staff1";
+    const staffPlainPassword = process.env.SEED_STAFF_PASSWORD || "StaffPass123!";
+
+    const { rows } = await pool.query("SELECT * FROM staff WHERE username=$1", [staffUsername]);
+    if (rows.length === 0) {
+      const saltRounds = parseInt(process.env.SALT_ROUNDS || "12", 10);
+      const hash = await bcrypt.hash(staffPlainPassword, saltRounds);
+      await pool.query("INSERT INTO staff (name, username, password_hash) VALUES ($1,$2,$3)", [
+        "Preseed Staff",
+        staffUsername,
+        hash
+      ]);
+      console.log(`🔐 Seeded staff user: ${staffUsername}`);
+    } else {
+      console.log(`ℹ️ Staff user '${staffUsername}' already exists — skipping seed.`);
+    }
   } catch (err) {
     console.error("❌ Error initializing database:", err.message);
+    throw err;
   }
 }

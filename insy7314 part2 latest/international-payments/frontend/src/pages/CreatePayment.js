@@ -28,16 +28,16 @@ function CreatePayment() {
   };
 
   return (
-    <div>
+    <div className="form-card">
       <h2>Create Payment</h2>
       {message && <p>{message}</p>}
       <form onSubmit={handleSubmit}>
-        <input name="amount" type="number" step="0.01" placeholder="Amount" value={form.amount} onChange={handleChange} required />
-        <input name="currency" placeholder="Currency (e.g., USD)" value={form.currency} onChange={handleChange} required />
-        <input name="provider" placeholder="Provider (e.g., SWIFT)" value={form.provider} onChange={handleChange} required />
-        <input name="payee_account" placeholder="Payee Account" value={form.payee_account} onChange={handleChange} required />
-        <input name="swift_code" placeholder="SWIFT Code" value={form.swift_code} onChange={handleChange} required />
-        <button type="submit">Pay Now</button>
+        <input name="amount" type="number" step="0.01" placeholder="Amount" onChange={handleChange} required />
+        <input name="currency" placeholder="Currency (e.g., USD)" onChange={handleChange} required />
+        <input name="provider" placeholder="Provider" value={form.provider} onChange={handleChange} required />
+        <input name="payee_account" placeholder="Payee Account" onChange={handleChange} required />
+        <input name="swift_code" placeholder="SWIFT Code" onChange={handleChange} required />
+        <button type="submit">Submit Payment</button>
       </form>
     </div>
   );

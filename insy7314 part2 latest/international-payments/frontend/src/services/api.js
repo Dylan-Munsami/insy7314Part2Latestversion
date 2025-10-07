@@ -1,9 +1,7 @@
 import axios from "axios";
 
-// Use your deployed Render URL here
-const API_URL = "https://insy7314part2latestversion.onrender.com/api";
+const API_URL = "https://insy7314part2latestversion.onrender.com"; // your backend
 
-// Create an Axios instance
 const api = axios.create({
   baseURL: API_URL,
   headers: {
@@ -11,12 +9,15 @@ const api = axios.create({
   }
 });
 
-// Export functions to call your backend
+// Customer APIs
 export const registerUser = (data) => api.post("/auth/register", data);
 export const loginUser = (data) => api.post("/auth/login", data);
-export const createPayment = (data, token) =>
-  api.post("/payments", data, { headers: { Authorization: `Bearer ${token}` } });
-export const getPayments = (token) =>
-  api.get("/payments", { headers: { Authorization: `Bearer ${token}` } });
+export const createPayment = (data, token) => api.post("/payments", data, { headers: { Authorization: `Bearer ${token}` } });
+export const getPayments = (token) => api.get("/payments", { headers: { Authorization: `Bearer ${token}` } });
+
+// Staff APIs
+export const staffLogin = (data) => api.post("/staff/login", data);
+export const getStaffPayments = (token) => api.get("/staff/payments", { headers: { Authorization: `Bearer ${token}` } });
+export const verifyPayment = (id, token) => api.post(`/staff/verify/${id}`, {}, { headers: { Authorization: `Bearer ${token}` } });
 
 export default api;

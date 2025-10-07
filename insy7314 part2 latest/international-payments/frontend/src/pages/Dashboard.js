@@ -4,51 +4,49 @@ import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
   const [payments, setPayments] = useState([]);
-  const navigate = useNavigate();
   const token = localStorage.getItem("token");
+  const navigate = useNavigate();
 
-useEffect(() => {
-  const fetchData = async () => {
+  useEffect(() => {
     if (!token) return navigate("/login");
-    try {
-      const res = await getPayments(token);
-      setPayments(res.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-  fetchData();
-}, [token, navigate]);
 
+    const fetchData = async () => {
+      try {
+        const res = await getPayments(token);
+        setPayments(res.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchData();
+  }, [token, navigate]);
 
   return (
-    <div>
-      <h2>Dashboard</h2>
-      <button onClick={() => navigate("/create-payment")}>Create Payment</button>
-      <table border="1" style={{ marginTop: "20px" }}>
+    <div className="dashboard">
+      <h2>Your Payments</h2>
+      <button onClick={() => navigate("/create-payment")} className="primary-btn">
+        + Create Payment
+      </button>
+      <table>
         <thead>
           <tr>
-            <th>ID</th>
             <th>Amount</th>
             <th>Currency</th>
             <th>Provider</th>
             <th>Payee</th>
-            <th>SWIFT Code</th>
+            <th>SWIFT</th>
             <th>Verified</th>
-            <th>Created At</th>
           </tr>
         </thead>
         <tbody>
           {payments.map((p) => (
             <tr key={p.id}>
-              <td>{p.id}</td>
               <td>{p.amount}</td>
               <td>{p.currency}</td>
               <td>{p.provider}</td>
               <td>{p.payee_account}</td>
               <td>{p.swift_code}</td>
-              <td>{p.verified ? "Yes" : "No"}</td>
-              <td>{new Date(p.created_at).toLocaleString()}</td>
+              <td>{p.verified ? "✅" : "❌"}</td>
             </tr>
           ))}
         </tbody>
