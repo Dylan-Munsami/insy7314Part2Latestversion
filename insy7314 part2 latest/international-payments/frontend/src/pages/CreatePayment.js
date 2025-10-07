@@ -15,19 +15,16 @@ function CreatePayment() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage("");
-    setError("");
     try {
       const res = await createPayment(form, token);
-      setMessage(res.data.message || "Payment created successfully!");
+      setMessage(res.data.message);
       setTimeout(() => navigate("/dashboard"), 1200);
     } catch (err) {
-      setError(err.response?.data?.message || "Payment failed. Please try again.");
+      setError(err.response?.data?.message || "Payment failed");
     }
   };
 
@@ -36,58 +33,12 @@ function CreatePayment() {
       <h2>Create International Payment</h2>
       {message && <p className="success">{message}</p>}
       {error && <p className="error">{error}</p>}
-
       <form onSubmit={handleSubmit}>
-        {/* Amount */}
-        <input
-          name="amount"
-          type="number"
-          step="0.01"
-          placeholder="Amount"
-          min="0.01"
-          onChange={handleChange}
-          required
-        />
-
-        {/* Currency */}
-        <input
-          name="currency"
-          placeholder="Currency (USD, EUR, ZAR)"
-          pattern="[A-Z]{3}"
-          title="3 uppercase letters (e.g., USD, EUR, ZAR)"
-          onChange={handleChange}
-          required
-        />
-
-        {/* Provider (read-only) */}
-        <input
-          name="provider"
-          placeholder="Provider"
-          value={form.provider}
-          readOnly
-          required
-        />
-
-        {/* Payee Account */}
-        <input
-          name="payee_account"
-          placeholder="Payee Account"
-          pattern="[0-9]{6,30}"
-          title="6-30 digit account number"
-          onChange={handleChange}
-          required
-        />
-
-        {/* SWIFT Code */}
-        <input
-          name="swift_code"
-          placeholder="SWIFT Code"
-          pattern="[A-Z0-9]{8,11}"
-          title="8-11 uppercase letters or numbers (e.g., ABCDZAJJ)"
-          onChange={handleChange}
-          required
-        />
-
+        <input name="amount" type="number" step="0.01" placeholder="Amount" onChange={handleChange} required />
+        <input name="currency" placeholder="Currency (USD, EUR)" onChange={handleChange} required />
+        <input name="provider" placeholder="Provider" value={form.provider} onChange={handleChange} required />
+        <input name="payee_account" placeholder="Payee Account" onChange={handleChange} required />
+        <input name="swift_code" placeholder="SWIFT Code" onChange={handleChange} required />
         <button type="submit">Pay Now</button>
       </form>
     </div>
