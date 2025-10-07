@@ -22,5 +22,6 @@ CREATE TABLE IF NOT EXISTS staff (
   id SERIAL PRIMARY KEY,
   name VARCHAR(100),
   username VARCHAR(50) UNIQUE NOT NULL,
-  password_hash TEXT NOT NULL
+  password_hash TEXT NOT NULL,
+  role VARCHAR(20) DEFAULT 'staff'
 );

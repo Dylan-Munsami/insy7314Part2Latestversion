@@ -1,11 +1,15 @@
+// backend/src/validators/inputValidators.js
 import validator from "validator";
 
 export function validateRegistration({ full_name, id_number, account_number, password }) {
   const namePattern = /^[A-Za-z\s]{2,100}$/;
   const idPattern = /^[0-9]{6,20}$/;
   const accPattern = /^[0-9]{6,20}$/;
-  if (!namePattern.test(full_name) || !idPattern.test(id_number) || !accPattern.test(account_number))
+
+  if (!namePattern.test(full_name) || !idPattern.test(id_number) || !accPattern.test(account_number)) {
     return false;
+  }
+
   return validator.isStrongPassword(password, { minLength: 8 });
 }
 

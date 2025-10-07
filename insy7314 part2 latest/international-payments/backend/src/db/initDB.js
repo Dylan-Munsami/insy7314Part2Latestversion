@@ -30,33 +30,38 @@ export async function initDB() {
     id SERIAL PRIMARY KEY,
     name VARCHAR(100),
     username VARCHAR(50) UNIQUE NOT NULL,
-    password_hash TEXT NOT NULL
+    password_hash TEXT NOT NULL,
+    role VARCHAR(20) DEFAULT 'staff'
   );
   `;
 
   try {
     await pool.query(schema);
     console.log("✅ Database initialized successfully");
-
-    // Seed staff user if not exists
-    const staffUsername = process.env.SEED_STAFF_USERNAME || "staff1";
-    const staffPlainPassword = process.env.SEED_STAFF_PASSWORD || "StaffPass123!";
-
-    const { rows } = await pool.query("SELECT * FROM staff WHERE username=$1", [staffUsername]);
-    if (rows.length === 0) {
-      const saltRounds = parseInt(process.env.SALT_ROUNDS || "12", 10);
-      const hash = await bcrypt.hash(staffPlainPassword, saltRounds);
-      await pool.query("INSERT INTO staff (name, username, password_hash) VALUES ($1,$2,$3)", [
-        "Preseed Staff",
-        staffUsername,
-        hash
-      ]);
-      console.log(`🔐 Seeded staff user: ${staffUsername}`);
-    } else {
-      console.log(`ℹ️ Staff user '${staffUsername}' already exists — skipping seed.`);
-    }
   } catch (err) {
     console.error("❌ Error initializing database:", err.message);
     throw err;
+  }
+}
+
+// Seed default staff
+export async function seedStaff() {
+  try {
+    const username = process.env.SEED_STAFF_USERNAME || "staff1";
+    const password = process.env.SEED_STAFF_PASSWORD || "StaffPass123!";
+
+    const { rows } = await pool.query("SELECT * FROM staff WHERE username=$1", [username]);
+    if (rows.length === 0) {
+      const hash = await bcrypt.hash(password, parseInt(process.env.SALT_ROUNDS || "12"));
+      await pool.query(
+        "INSERT INTO staff (name, username, password_hash, role) VALUES ($1,$2,$3,$4)",
+        ["Default Staff", username, hash, "staff"]
+      );
+      console.log(`✅ Seeded staff user: ${username}`);
+    } else {
+      console.log(`ℹ️ Staff user '${username}' already exists`);
+    }
+  } catch (err) {
+    console.error("❌ Error seeding staff:", err.message);
   }
 }
