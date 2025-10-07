@@ -7,7 +7,7 @@ function Register() {
     full_name: "",
     id_number: "",
     account_number: "",
-    password: ""
+    password: "",
   });
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -29,12 +29,36 @@ function Register() {
     <div className="form-card">
       <h2>Register</h2>
       {error && <p className="error">{error}</p>}
-
       <form onSubmit={handleSubmit}>
-        <input name="full_name" placeholder="Full Name" onChange={handleChange} required />
-        <input name="id_number" placeholder="ID Number" onChange={handleChange} required />
-        <input name="account_number" placeholder="Account Number" onChange={handleChange} required />
-        <input type="password" name="password" placeholder="Password" onChange={handleChange} required />
+        <input
+          name="full_name"
+          placeholder="Full Name"
+          value={form.full_name}
+          onChange={handleChange}
+          required
+        />
+        <input
+          name="id_number"
+          placeholder="ID Number"
+          value={form.id_number}
+          onChange={handleChange}
+          required
+        />
+        <input
+          name="account_number"
+          placeholder="Account Number"
+          value={form.account_number}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={form.password}
+          onChange={handleChange}
+          required
+        />
         <button type="submit">Sign Up</button>
       </form>
     </div>

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [form, setForm] = useState({ account_number: "", password: "" });
-  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) =>
@@ -17,18 +17,30 @@ function Login() {
       localStorage.setItem("token", res.data.token);
       navigate("/dashboard");
     } catch (err) {
-      setMessage(err.response?.data?.message || "Login failed");
+      setError(err.response?.data?.message || "Login failed");
     }
   };
 
   return (
     <div className="form-card">
-      <h2>Login</h2>
-      {message && <p className="error">{message}</p>}
-
+      <h2>Customer Login</h2>
+      {error && <p className="error">{error}</p>}
       <form onSubmit={handleSubmit}>
-        <input name="account_number" placeholder="Account Number" onChange={handleChange} required />
-        <input type="password" name="password" placeholder="Password" onChange={handleChange} required />
+        <input
+          name="account_number"
+          placeholder="Account Number"
+          value={form.account_number}
+          onChange={handleChange}
+          required
+        />
+        <input
+          name="password"
+          type="password"
+          placeholder="Password"
+          value={form.password}
+          onChange={handleChange}
+          required
+        />
         <button type="submit">Login</button>
       </form>
     </div>

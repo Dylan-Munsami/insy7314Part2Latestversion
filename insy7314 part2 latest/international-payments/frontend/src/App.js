@@ -9,8 +9,8 @@ import StaffDashboard from "./pages/StaffDashboard";
 
 function Navbar() {
   const navigate = useNavigate();
-  const token = localStorage.getItem("token"); // customer token
-  const staffToken = localStorage.getItem("staffToken"); // staff token
+  const token = localStorage.getItem("token");
+  const staffToken = localStorage.getItem("staffToken");
 
   const handleLogout = () => {
     localStorage.clear();
@@ -19,7 +19,7 @@ function Navbar() {
 
   return (
     <nav className="navbar">
-      <div className="nav-logo">🌍 International Bank</div>
+      <div className="nav-logo">🌍 SwiftPay</div>
       <div className="nav-links">
         {!token && !staffToken && (
           <>

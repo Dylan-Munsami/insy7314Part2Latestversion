@@ -8,19 +8,17 @@ function CreatePayment() {
     currency: "",
     provider: "SWIFT",
     payee_account: "",
-    swift_code: ""
+    swift_code: "",
   });
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const token = localStorage.getItem("token");
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-    setMessage("");
     try {
       const res = await createPayment(form, token);
       setMessage(res.data.message);
@@ -35,10 +33,9 @@ function CreatePayment() {
       <h2>Create International Payment</h2>
       {message && <p className="success">{message}</p>}
       {error && <p className="error">{error}</p>}
-
       <form onSubmit={handleSubmit}>
         <input name="amount" type="number" step="0.01" placeholder="Amount" onChange={handleChange} required />
-        <input name="currency" placeholder="Currency (e.g., USD)" onChange={handleChange} required />
+        <input name="currency" placeholder="Currency (USD, EUR)" onChange={handleChange} required />
         <input name="provider" placeholder="Provider" value={form.provider} onChange={handleChange} required />
         <input name="payee_account" placeholder="Payee Account" onChange={handleChange} required />
         <input name="swift_code" placeholder="SWIFT Code" onChange={handleChange} required />

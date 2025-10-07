@@ -5,8 +5,8 @@ import { useNavigate } from "react-router-dom";
 function StaffDashboard() {
   const [payments, setPayments] = useState([]);
   const [message, setMessage] = useState("");
-  const navigate = useNavigate();
   const token = localStorage.getItem("staffToken");
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!token) return navigate("/staff-login");
@@ -26,17 +26,17 @@ function StaffDashboard() {
     try {
       const res = await verifyPayment(id, token);
       setMessage(res.data.message);
-      setPayments((prev) => prev.map(p => p.id === id ? { ...p, verified: true } : p));
+      setPayments(prev => prev.map(p => p.id === id ? { ...p, verified: true } : p));
     } catch (err) {
       console.error(err);
     }
   };
 
   return (
-    <div style={{ maxWidth: "1000px", margin: "20px auto" }}>
+    <div className="dashboard">
       <h2>Staff Dashboard</h2>
-      {message && <p style={{ color: "green" }}>{message}</p>}
-      <table border="1" style={{ width: "100%", marginTop: "20px", borderCollapse: "collapse" }}>
+      {message && <p className="success">{message}</p>}
+      <table>
         <thead>
           <tr>
             <th>ID</th>
@@ -58,13 +58,9 @@ function StaffDashboard() {
               <td>{p.provider}</td>
               <td>{p.payee_account}</td>
               <td>{p.swift_code}</td>
-              <td>{p.verified ? "Yes" : "No"}</td>
+              <td>{p.verified ? "✅" : "❌"}</td>
               <td>
-                {!p.verified && (
-                  <button onClick={() => handleVerify(p.id)} style={{ padding: "5px 10px", cursor: "pointer" }}>
-                    Verify & Submit to SWIFT
-                  </button>
-                )}
+                {!p.verified && <button onClick={() => handleVerify(p.id)}>Verify & Submit</button>}
               </td>
             </tr>
           ))}

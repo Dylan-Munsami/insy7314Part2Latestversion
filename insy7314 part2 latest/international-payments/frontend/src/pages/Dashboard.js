@@ -9,7 +9,7 @@ function Dashboard() {
 
   useEffect(() => {
     if (!token) return navigate("/login");
-    const fetchData = async () => {
+    const fetchPayments = async () => {
       try {
         const res = await getPayments(token);
         setPayments(res.data);
@@ -17,7 +17,7 @@ function Dashboard() {
         console.error(err);
       }
     };
-    fetchData();
+    fetchPayments();
   }, [token, navigate]);
 
   return (
