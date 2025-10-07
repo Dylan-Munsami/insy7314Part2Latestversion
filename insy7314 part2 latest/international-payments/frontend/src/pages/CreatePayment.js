@@ -11,6 +11,7 @@ function CreatePayment() {
     swift_code: ""
   });
   const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
@@ -18,26 +19,30 @@ function CreatePayment() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setMessage("");
     try {
       const res = await createPayment(form, token);
       setMessage(res.data.message);
-      navigate("/dashboard");
+      setTimeout(() => navigate("/dashboard"), 1200);
     } catch (err) {
-      setMessage(err.response?.data?.message || "Payment failed");
+      setError(err.response?.data?.message || "Payment failed");
     }
   };
 
   return (
     <div className="form-card">
-      <h2>Create Payment</h2>
-      {message && <p>{message}</p>}
+      <h2>Create International Payment</h2>
+      {message && <p className="success">{message}</p>}
+      {error && <p className="error">{error}</p>}
+
       <form onSubmit={handleSubmit}>
         <input name="amount" type="number" step="0.01" placeholder="Amount" onChange={handleChange} required />
         <input name="currency" placeholder="Currency (e.g., USD)" onChange={handleChange} required />
         <input name="provider" placeholder="Provider" value={form.provider} onChange={handleChange} required />
         <input name="payee_account" placeholder="Payee Account" onChange={handleChange} required />
         <input name="swift_code" placeholder="SWIFT Code" onChange={handleChange} required />
-        <button type="submit">Submit Payment</button>
+        <button type="submit">Pay Now</button>
       </form>
     </div>
   );

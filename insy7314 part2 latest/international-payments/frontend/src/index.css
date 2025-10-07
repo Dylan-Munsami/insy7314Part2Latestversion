@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+
 body {
   font-family: "Poppins", sans-serif;
   background-color: #f5f6fa;
@@ -106,3 +109,19 @@ th {
   color: red;
   text-align: center;
 }
+.success {
+  color: green;
+  text-align: center;
+  font-weight: 500;
+}
+.error {
+  color: red;
+  text-align: center;
+  font-weight: 500;
+}
+
+button:disabled {
+  background: gray;
+  cursor: not-allowed;
+}
+

@@ -9,7 +9,6 @@ function Dashboard() {
 
   useEffect(() => {
     if (!token) return navigate("/login");
-
     const fetchData = async () => {
       try {
         const res = await getPayments(token);
@@ -23,7 +22,7 @@ function Dashboard() {
 
   return (
     <div className="dashboard">
-      <h2>Your Payments</h2>
+      <h2>Your Payment History</h2>
       <button onClick={() => navigate("/create-payment")} className="primary-btn">
         + Create Payment
       </button>
