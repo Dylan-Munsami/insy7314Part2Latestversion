@@ -12,13 +12,10 @@ const router = express.Router();
 // Staff login
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
-  try {
-    const p = await pool;
-    const result = await p.request()
-      .input("username", username)
-      .query("SELECT * FROM staff WHERE username=@username");
 
-    const staff = result.recordset[0];
+  try {
+    const result = await pool.query("SELECT * FROM staff WHERE username=$1", [username]);
+    const staff = result.rows[0];
     if (!staff) return res.status(401).json({ message: "Invalid credentials" });
 
     const valid = await bcrypt.compare(password, staff.password_hash);
@@ -32,18 +29,18 @@ router.post("/login", async (req, res) => {
 
     res.json({ message: "Staff login successful", token });
   } catch (err) {
-    console.error(err);
+    console.error("Staff login error:", err);
     res.status(500).json({ message: "Error logging in", error: err.message });
   }
 });
 
-// Get all payments (staff)
+// View all payments (staff)
 router.get("/payments", verifyToken, async (req, res) => {
   if (req.user.role !== "staff") return res.status(403).json({ message: "Forbidden: staff only" });
+
   try {
-    const p = await pool;
-    const result = await p.request().query("SELECT * FROM payments ORDER BY created_at DESC");
-    res.json(result.recordset);
+    const payments = await pool.query("SELECT * FROM payments ORDER BY created_at DESC");
+    res.json(payments.rows);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Error fetching payments", error: err.message });
@@ -53,11 +50,9 @@ router.get("/payments", verifyToken, async (req, res) => {
 // Verify payment
 router.post("/verify/:id", verifyToken, async (req, res) => {
   if (req.user.role !== "staff") return res.status(403).json({ message: "Forbidden: staff only" });
+
   try {
-    const p = await pool;
-    await p.request()
-      .input("id", req.params.id)
-      .query("UPDATE payments SET verified=1 WHERE id=@id");
+    await pool.query("UPDATE payments SET verified=true WHERE id=$1", [req.params.id]);
     res.json({ message: "Payment verified and sent to SWIFT" });
   } catch (err) {
     console.error(err);
