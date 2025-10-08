@@ -27,10 +27,17 @@ router.post("/login", async (req, res) => {
       { expiresIn: "2h" }
     );
 
-    res.json({ message: "Staff login successful", token });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 2 * 60 * 60 * 1000
+    });
+
+    res.json({ message: "Staff login successful" });
   } catch (err) {
     console.error("Staff login error:", err);
-    res.status(500).json({ message: "Error logging in", error: err.message });
+    res.status(500).json({ message: "Error logging in" });
   }
 });
 
@@ -39,24 +46,27 @@ router.get("/payments", verifyToken, async (req, res) => {
   if (req.user.role !== "staff") return res.status(403).json({ message: "Forbidden: staff only" });
 
   try {
-    const payments = await pool.query("SELECT * FROM payments ORDER BY created_at DESC");
+    const payments = await pool.query("SELECT p.id, p.amount, p.currency, p.provider, p.payee_account, p.swift_code, p.verified, p.created_at, c.full_name, c.account_number FROM payments p JOIN customers c ON p.customer_id = c.id ORDER BY p.created_at DESC");
     res.json(payments.rows);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Error fetching payments", error: err.message });
+    console.error("Error fetching payments:", err);
+    res.status(500).json({ message: "Error fetching payments" });
   }
 });
 
-// Verify payment
+// Verify payment (staff)
 router.post("/verify/:id", verifyToken, async (req, res) => {
   if (req.user.role !== "staff") return res.status(403).json({ message: "Forbidden: staff only" });
 
+  const paymentId = req.params.id;
   try {
-    await pool.query("UPDATE payments SET verified=true WHERE id=$1", [req.params.id]);
-    res.json({ message: "Payment verified and sent to SWIFT" });
+    await pool.query("UPDATE payments SET verified=true WHERE id=$1", [paymentId]);
+    // Here you would integrate with SWIFT/BACKEND gateway; we stop at 'submit to SWIFT' trigger
+    console.log(`Payment ${paymentId} verified by staff ${req.user.username || req.user.id}. Ready to submit to SWIFT.`);
+    res.json({ message: "Payment verified and ready for SWIFT submission" });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Error verifying payment", error: err.message });
+    console.error("Error verifying payment:", err);
+    res.status(500).json({ message: "Error verifying payment" });
   }
 });
 
