@@ -1,4 +1,3 @@
-
 // backend/src/routes/payments.js
 import express from "express";
 import { pool } from "../db/db.js";

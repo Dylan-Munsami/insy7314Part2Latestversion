@@ -1,3 +1,4 @@
+
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { pool } from "./db.js";
@@ -38,3 +39,4 @@ const seedStaff = async () => {
 };
 
 seedStaff();
+

@@ -1,3 +1,4 @@
+// backend/src/validators/inputValidators.js
 import validator from "validator";
 
 export function validateRegistration({ full_name, id_number, account_number, password }) {
@@ -9,18 +10,12 @@ export function validateRegistration({ full_name, id_number, account_number, pas
     return false;
   }
 
-  return validator.isStrongPassword(password, {
-    minLength: 8,
-    minLowercase: 1,
-    minUppercase: 1,
-    minNumbers: 1,
-    minSymbols: 1
-  });
+  return validator.isStrongPassword(password, { minLength: 8 });
 }
 
 export function validatePayment({ amount, currency, provider, payee_account, swift_code }) {
   return (
-    validator.isFloat(amount.toString(), { min: 0.01 }) &&
+    validator.isNumeric(amount.toString()) &&
     /^[A-Z]{3}$/.test(currency) &&
     /^[A-Za-z\s]{3,50}$/.test(provider) &&
     /^[0-9]{6,30}$/.test(payee_account) &&
