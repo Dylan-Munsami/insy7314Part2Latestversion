@@ -6,38 +6,51 @@ dotenv.config();
 
 export async function initDB() {
   const schema = `
-  CREATE TABLE IF NOT EXISTS customers (
-    id SERIAL PRIMARY KEY,
-    full_name VARCHAR(100) NOT NULL,
-    id_number VARCHAR(20) UNIQUE NOT NULL,
-    account_number VARCHAR(20) UNIQUE NOT NULL,
-    password_hash TEXT NOT NULL
-  );
+  -- Customers table
+  IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='customers' AND xtype='U')
+  BEGIN
+    CREATE TABLE customers (
+      id INT IDENTITY(1,1) PRIMARY KEY,
+      full_name NVARCHAR(100) NOT NULL,
+      id_number NVARCHAR(20) UNIQUE NOT NULL,
+      account_number NVARCHAR(20) UNIQUE NOT NULL,
+      password_hash NVARCHAR(MAX) NOT NULL
+    )
+  END
 
-  CREATE TABLE IF NOT EXISTS payments (
-    id SERIAL PRIMARY KEY,
-    customer_id INT REFERENCES customers(id),
-    amount NUMERIC(12,2) NOT NULL,
-    currency VARCHAR(10) NOT NULL,
-    provider VARCHAR(50) NOT NULL,
-    payee_account VARCHAR(30) NOT NULL,
-    swift_code VARCHAR(20) NOT NULL,
-    verified BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT NOW()
-  );
+  -- Payments table
+  IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='payments' AND xtype='U')
+  BEGIN
+    CREATE TABLE payments (
+      id INT IDENTITY(1,1) PRIMARY KEY,
+      customer_id INT FOREIGN KEY REFERENCES customers(id),
+      amount DECIMAL(12,2) NOT NULL,
+      currency NVARCHAR(10) NOT NULL,
+      provider NVARCHAR(50) NOT NULL,
+      payee_account NVARCHAR(30) NOT NULL,
+      swift_code NVARCHAR(20) NOT NULL,
+      verified BIT DEFAULT 0,
+      created_at DATETIME DEFAULT GETDATE()
+    )
+  END
 
-  CREATE TABLE IF NOT EXISTS staff (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100),
-    username VARCHAR(50) UNIQUE NOT NULL,
-    password_hash TEXT NOT NULL,
-    role VARCHAR(20) DEFAULT 'staff'
-  );
+  -- Staff table
+  IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='staff' AND xtype='U')
+  BEGIN
+    CREATE TABLE staff (
+      id INT IDENTITY(1,1) PRIMARY KEY,
+      name NVARCHAR(100),
+      username NVARCHAR(50) UNIQUE NOT NULL,
+      password_hash NVARCHAR(MAX) NOT NULL,
+      role NVARCHAR(20) DEFAULT 'staff'
+    )
+  END
   `;
 
   try {
-    await pool.query(schema);
-    console.log("✅ Database initialized successfully");
+    const p = await pool;
+    await p.request().query(schema);
+    console.log("✅ Database tables created/verified successfully");
   } catch (err) {
     console.error("❌ Error initializing database:", err.message);
     throw err;
@@ -49,14 +62,20 @@ export async function seedStaff() {
   try {
     const username = process.env.SEED_STAFF_USERNAME || "staff1";
     const password = process.env.SEED_STAFF_PASSWORD || "StaffPass123!";
+    const p = await pool;
 
-    const { rows } = await pool.query("SELECT * FROM staff WHERE username=$1", [username]);
-    if (rows.length === 0) {
+    const result = await p.request()
+      .input("username", username)
+      .query("SELECT * FROM staff WHERE username = @username");
+
+    if (result.recordset.length === 0) {
       const hash = await bcrypt.hash(password, parseInt(process.env.SALT_ROUNDS || "12"));
-      await pool.query(
-        "INSERT INTO staff (name, username, password_hash, role) VALUES ($1,$2,$3,$4)",
-        ["Default Staff", username, hash, "staff"]
-      );
+      await p.request()
+        .input("name", "Default Staff")
+        .input("username", username)
+        .input("password_hash", hash)
+        .input("role", "staff")
+        .query("INSERT INTO staff (name, username, password_hash, role) VALUES (@name,@username,@password_hash,@role)");
       console.log(`✅ Seeded staff user: ${username}`);
     } else {
       console.log(`ℹ️ Staff user '${username}' already exists`);
