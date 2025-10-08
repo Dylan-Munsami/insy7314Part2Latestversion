@@ -1,10 +1,9 @@
-// backend/src/db/initDB.js
 import { pool } from "./db.js";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 dotenv.config();
 
-export async function initDB() {
+export async function initDB(retries = 5) {
   const schema = `
   CREATE TABLE IF NOT EXISTS customers (
     id SERIAL PRIMARY KEY,
@@ -39,17 +38,20 @@ export async function initDB() {
     await pool.query(schema);
     console.log("✅ Database initialized successfully");
   } catch (err) {
+    if (retries > 0) {
+      console.warn(`⚠️ Database init failed (${err.message}). Retrying in 5s...`);
+      await new Promise(r => setTimeout(r, 5000));
+      return initDB(retries - 1);
+    }
     console.error("❌ Error initializing database:", err.message);
     throw err;
   }
 }
 
-// Seed default staff
 export async function seedStaff() {
   try {
     const username = process.env.SEED_STAFF_USERNAME || "staff1";
     const password = process.env.SEED_STAFF_PASSWORD || "StaffPass123!";
-
     const { rows } = await pool.query("SELECT * FROM staff WHERE username=$1", [username]);
     if (rows.length === 0) {
       const hash = await bcrypt.hash(password, parseInt(process.env.SALT_ROUNDS || "12"));
