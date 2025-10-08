@@ -1,8 +1,8 @@
-// backend/src/routes/payments.js
 import express from "express";
 import { pool } from "../db/db.js";
 import { verifyToken } from "../middleware/auth.js";
 import { validatePayment } from "../validators/inputValidators.js";
+import validator from "validator";
 
 const router = express.Router();
 
@@ -32,7 +32,13 @@ router.get("/", verifyToken, async (req, res) => {
 
   try {
     const payments = await pool.query("SELECT * FROM payments WHERE customer_id=$1 ORDER BY created_at DESC", [req.user.id]);
-    res.json(payments.rows);
+    // Sanitize output to prevent XSS
+    const sanitized = payments.rows.map(p => ({
+      ...p,
+      payee_account: validator.escape(p.payee_account),
+      swift_code: validator.escape(p.swift_code)
+    }));
+    res.json(sanitized);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Error fetching payments", error: err.message });

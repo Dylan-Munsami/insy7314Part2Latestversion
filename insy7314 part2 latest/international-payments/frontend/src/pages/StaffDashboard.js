@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getStaffPayments, verifyPayment } from "../services/api";
+import { getStaffPayments, verifyPayment, sanitize } from "../services/api";
 import { useNavigate } from "react-router-dom";
 
 function StaffDashboard() {
@@ -14,7 +14,13 @@ function StaffDashboard() {
     const fetchPayments = async () => {
       try {
         const res = await getStaffPayments(token);
-        setPayments(res.data);
+        // Sanitize payee_account and swift_code
+        const sanitized = res.data.map(p => ({
+          ...p,
+          payee_account: sanitize(p.payee_account),
+          swift_code: sanitize(p.swift_code),
+        }));
+        setPayments(sanitized);
       } catch (err) {
         console.error(err);
       }
@@ -26,7 +32,9 @@ function StaffDashboard() {
     try {
       const res = await verifyPayment(id, token);
       setMessage(res.data.message);
-      setPayments(prev => prev.map(p => p.id === id ? { ...p, verified: true } : p));
+      setPayments(prev =>
+        prev.map(p => (p.id === id ? { ...p, verified: true } : p))
+      );
     } catch (err) {
       console.error(err);
     }
@@ -60,7 +68,9 @@ function StaffDashboard() {
               <td>{p.swift_code}</td>
               <td>{p.verified ? "✅" : "❌"}</td>
               <td>
-                {!p.verified && <button onClick={() => handleVerify(p.id)}>Verify & Submit</button>}
+                {!p.verified && (
+                  <button onClick={() => handleVerify(p.id)}>Verify & Submit</button>
+                )}
               </td>
             </tr>
           ))}

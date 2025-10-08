@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { createPayment } from "../services/api";
+import React, { useState, useEffect } from "react";
+import { createPayment, sanitize } from "../services/api";
 import { useNavigate } from "react-router-dom";
 
 function CreatePayment() {
@@ -20,7 +20,13 @@ function CreatePayment() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await createPayment(form, token);
+      // Sanitize inputs before sending
+      const sanitizedForm = {
+        ...form,
+        payee_account: sanitize(form.payee_account),
+        swift_code: sanitize(form.swift_code),
+      };
+      const res = await createPayment(sanitizedForm, token);
       setMessage(res.data.message);
       setTimeout(() => navigate("/dashboard"), 1200);
     } catch (err) {

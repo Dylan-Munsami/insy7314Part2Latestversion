@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getPayments } from "../services/api";
+import { getPayments, sanitize } from "../services/api";
 import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
@@ -9,10 +9,17 @@ function Dashboard() {
 
   useEffect(() => {
     if (!token) return navigate("/login");
+
     const fetchPayments = async () => {
       try {
         const res = await getPayments(token);
-        setPayments(res.data);
+        // Sanitize payee_account and swift_code
+        const sanitized = res.data.map(p => ({
+          ...p,
+          payee_account: sanitize(p.payee_account),
+          swift_code: sanitize(p.swift_code),
+        }));
+        setPayments(sanitized);
       } catch (err) {
         console.error(err);
       }
