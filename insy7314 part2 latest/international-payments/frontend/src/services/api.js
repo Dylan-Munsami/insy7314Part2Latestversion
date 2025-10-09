@@ -1,12 +1,8 @@
-
 import axios from "axios";
 
-const API_URL = "https://insy7314part2latestversion.onrender.com/api"; // backend base URL
+const API_URL = process.env.REACT_APP_API_URL;
 
-const api = axios.create({
-  baseURL: API_URL,
-  headers: { "Content-Type": "application/json" },
-});
+const api = axios.create({ baseURL: API_URL, headers: { "Content-Type": "application/json" } });
 
 // Customer APIs
 export const registerUser = (data) => api.post("/auth/register", data);
@@ -24,4 +20,3 @@ export const verifyPayment = (id, token) =>
   api.post(`/staff/verify/${id}`, {}, { headers: { Authorization: `Bearer ${token}` } });
 
 export default api;
-//api.js
