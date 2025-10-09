@@ -43,6 +43,4 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Optional - if you deploy to Render or similar
-      - name: Deploy to Render
-        run: echo "🚀 Deployment step would go here"
+      
