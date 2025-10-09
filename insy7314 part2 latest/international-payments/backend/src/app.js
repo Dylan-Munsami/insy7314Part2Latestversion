@@ -10,14 +10,17 @@ import limiter from "./middleware/rateLimiter.js";
 
 const app = express();
 
+// Trust proxy headers (needed for rate limiter behind cloud proxies)
+app.set("trust proxy", 1);
+
 // Enforce HTTPS
 app.use(enforceHttps);
 
-// Secure headers
+// Secure headers with Helmet
 app.use(
   helmet({
     hsts: { maxAge: 31536000, includeSubDomains: true, preload: true },
-    contentSecurityPolicy: false
+    contentSecurityPolicy: false, // optional: can customize later
   })
 );
 
@@ -27,6 +30,7 @@ app.use(cors());
 // Rate limiting for all requests
 app.use(limiter);
 
+// Body parser
 app.use(express.json());
 
 // Routes
@@ -34,6 +38,9 @@ app.use("/api/auth", authRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/staff", staffRoutes);
 
-app.get("/", (req, res) => res.send("🌍 International Payments API running securely!"));
+// Root endpoint
+app.get("/", (req, res) =>
+  res.send("🌍 International Payments API running securely!")
+);
 
 export default app;
