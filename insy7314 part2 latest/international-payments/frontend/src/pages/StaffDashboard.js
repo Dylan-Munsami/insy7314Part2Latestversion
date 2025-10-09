@@ -1,14 +1,15 @@
-
 import React, { useEffect, useState } from "react";
 import { getStaffPayments, verifyPayment } from "../services/api";
 import { useNavigate } from "react-router-dom";
 
 function StaffDashboard() {
   const [payments, setPayments] = useState([]);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(""); // Success messages
+  const [error, setError] = useState(""); // Error messages
   const token = localStorage.getItem("staffToken");
   const navigate = useNavigate();
 
+  // Fetch all payments on load
   useEffect(() => {
     if (!token) return navigate("/staff-login");
 
@@ -17,19 +18,26 @@ function StaffDashboard() {
         const res = await getStaffPayments(token);
         setPayments(res.data);
       } catch (err) {
-        console.error(err);
+        setError(err.response?.data?.message || "Failed to fetch payments.");
       }
     };
     fetchPayments();
   }, [token, navigate]);
 
+  // Verify payment function
   const handleVerify = async (id) => {
+    setError("");
+    setMessage("");
     try {
       const res = await verifyPayment(id, token);
-      setMessage(res.data.message);
-      setPayments(prev => prev.map(p => p.id === id ? { ...p, verified: true } : p));
+      setMessage(res.data.message || "Payment verified successfully!");
+      
+      // Update the verified status in the table
+      setPayments((prev) =>
+        prev.map((p) => (p.id === id ? { ...p, verified: true } : p))
+      );
     } catch (err) {
-      console.error(err);
+      setError(err.response?.data?.message || "Failed to verify payment.");
     }
   };
 
@@ -37,6 +45,7 @@ function StaffDashboard() {
     <div className="dashboard">
       <h2>Staff Dashboard</h2>
       {message && <p className="success">{message}</p>}
+      {error && <p className="error">{error}</p>}
       <table>
         <thead>
           <tr>
@@ -51,7 +60,7 @@ function StaffDashboard() {
           </tr>
         </thead>
         <tbody>
-          {payments.map(p => (
+          {payments.map((p) => (
             <tr key={p.id}>
               <td>{p.id}</td>
               <td>{p.amount}</td>
@@ -61,7 +70,9 @@ function StaffDashboard() {
               <td>{p.swift_code}</td>
               <td>{p.verified ? "✅" : "❌"}</td>
               <td>
-                {!p.verified && <button onClick={() => handleVerify(p.id)}>Verify & Submit</button>}
+                {!p.verified && (
+                  <button onClick={() => handleVerify(p.id)}>Verify & Submit</button>
+                )}
               </td>
             </tr>
           ))}
@@ -72,4 +83,3 @@ function StaffDashboard() {
 }
 
 export default StaffDashboard;
-//staffdashboard.js

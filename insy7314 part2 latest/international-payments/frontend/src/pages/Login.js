@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { loginUser } from "../services/api";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 function Login() {
   const [form, setForm] = useState({ account_number: "", password: "" });
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) =>
@@ -13,12 +13,21 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setSuccess("");
+
+    if (!form.account_number || !form.password) {
+      setError("Please fill in all fields.");
+      return;
+    }
+
     try {
       const res = await loginUser(form);
       localStorage.setItem("token", res.data.token);
-      navigate("/dashboard");
+      setSuccess("✅ Login successful! Redirecting...");
+      setTimeout(() => navigate("/dashboard"), 1000);
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
+      setError(err.response?.data?.message || "Invalid credentials.");
     }
   };
 
@@ -26,6 +35,7 @@ function Login() {
     <div className="form-card">
       <h2>Customer Login</h2>
       {error && <p className="error">{error}</p>}
+      {success && <p className="success">{success}</p>}
       <form onSubmit={handleSubmit}>
         <input
           name="account_number"
@@ -49,5 +59,3 @@ function Login() {
 }
 
 export default Login;
-//login.js
-
