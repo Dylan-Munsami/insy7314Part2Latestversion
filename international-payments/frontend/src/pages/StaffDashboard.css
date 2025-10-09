@@ -1,0 +1,79 @@
+.staff-dashboard {
+  background-color: #f9fafb;
+  min-height: 100vh;
+  padding: 40px;
+  font-family: "Inter", sans-serif;
+}
+
+.dashboard-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.alert {
+  text-align: center;
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+  font-weight: 500;
+}
+
+.alert.success {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.alert.error {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.table-container {
+  overflow-x: auto;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  padding: 20px;
+}
+
+.payments-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.payments-table th {
+  background-color: #1f2937;
+  color: white;
+  padding: 12px;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+.payments-table td {
+  padding: 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.verified-row {
+  background-color: #f0fdf4;
+}
+
+.verify-btn {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.verify-btn:hover {
+  background-color: #1d4ed8;
+}
