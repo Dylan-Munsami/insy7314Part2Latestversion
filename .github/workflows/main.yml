@@ -1,0 +1,46 @@
+name: DevSecOps CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: international-payments/backend
+
+      - name: Run linting
+        run: npx eslint .
+        working-directory: international-payments/backend
+
+      - name: Run tests
+        run: npm test
+        working-directory: international-payments/backend
+
+      - name: Security scan with npm audit
+        run: npm audit --audit-level=moderate || true
+        working-directory: international-payments/backend
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+   
