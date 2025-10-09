@@ -1,51 +1,75 @@
 import axios from "axios";
 import DOMPurify from "dompurify";
 
-const API_URL = "https://insy7314part2latestversion.onrender.com/api"; // backend URL
+const API_URL = "https://insy7314part2latestversion.onrender.com/api"; // backend base URL
 
 const api = axios.create({
   baseURL: API_URL,
   headers: { "Content-Type": "application/json" },
-  withCredentials: true, // required for CSRF & refresh tokens
 });
 
-// Interceptor to refresh JWT if expired
-api.interceptors.response.use(
-  response => response,
-  async error => {
-    const originalRequest = error.config;
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      try {
-        const res = await axios.post(`${API_URL}/auth/refresh`, {}, { withCredentials: true });
-        localStorage.setItem("token", res.data.token);
-        originalRequest.headers["Authorization"] = `Bearer ${res.data.token}`;
-        return api(originalRequest);
-      } catch (err) {
-        console.error("Token refresh failed", err);
-        return Promise.reject(error);
-      }
-    }
-    return Promise.reject(error);
-  }
-);
-
-// Customer APIs
-export const registerUser = (data) => api.post("/auth/register", data);
-export const loginUser = (data) => api.post("/auth/login", data);
-export const createPayment = (data, token) =>
-  api.post("/payments", data, { headers: { Authorization: `Bearer ${token}` } });
-export const getPayments = (token) =>
-  api.get("/payments", { headers: { Authorization: `Bearer ${token}` } });
-
-// Staff APIs
-export const staffLogin = (data) => api.post("/staff/login", data);
-export const getStaffPayments = (token) =>
-  api.get("/staff/payments", { headers: { Authorization: `Bearer ${token}` } });
-export const verifyPayment = (id, token) =>
-  api.post(`/staff/verify/${id}`, {}, { headers: { Authorization: `Bearer ${token}` } });
-
+// ====================
 // Sanitizer for XSS-safe rendering
+// ====================
 export const sanitize = (input) => DOMPurify.sanitize(input);
+
+// ====================
+// Customer APIs
+// ====================
+
+// Register new customer
+export const registerUser = (data) => api.post("/auth/register", data);
+
+// Customer login
+export const loginUser = async (data) => {
+  const res = await api.post("/auth/login", data);
+  // store JWT in localStorage
+  if (res.data.token) localStorage.setItem("token", res.data.token);
+  return res;
+};
+
+// Create new payment (requires JWT)
+export const createPayment = (data) => {
+  const token = localStorage.getItem("token");
+  return api.post("/payments", data, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+};
+
+// Get customer payments (requires JWT)
+export const getPayments = () => {
+  const token = localStorage.getItem("token");
+  return api.get("/payments", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+};
+
+// ====================
+// Staff APIs
+// ====================
+
+// Staff login
+export const staffLogin = async (data) => {
+  const res = await api.post("/staff/login", data);
+  // store JWT in localStorage separately for staff
+  if (res.data.token) localStorage.setItem("staffToken", res.data.token);
+  return res;
+};
+
+// Get all payments for staff dashboard
+export const getStaffPayments = () => {
+  const token = localStorage.getItem("staffToken");
+  return api.get("/staff/payments", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+};
+
+// Verify a payment (staff)
+export const verifyPayment = (id) => {
+  const token = localStorage.getItem("staffToken");
+  return api.post(`/staff/verify/${id}`, {}, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+};
 
 export default api;

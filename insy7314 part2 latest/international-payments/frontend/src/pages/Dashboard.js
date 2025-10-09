@@ -13,17 +13,18 @@ function Dashboard() {
     const fetchPayments = async () => {
       try {
         const res = await getPayments(token);
-        // Sanitize payee_account and swift_code
-        const sanitized = res.data.map(p => ({
+        // sanitize before rendering
+        const sanitizedPayments = res.data.map(p => ({
           ...p,
           payee_account: sanitize(p.payee_account),
           swift_code: sanitize(p.swift_code),
         }));
-        setPayments(sanitized);
+        setPayments(sanitizedPayments);
       } catch (err) {
         console.error(err);
       }
     };
+
     fetchPayments();
   }, [token, navigate]);
 
