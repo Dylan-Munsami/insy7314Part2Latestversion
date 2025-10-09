@@ -25,3 +25,4 @@ CREATE TABLE IF NOT EXISTS staff (
   password_hash TEXT NOT NULL,
   role VARCHAR(20) DEFAULT 'staff'
 );
+//schema.sql

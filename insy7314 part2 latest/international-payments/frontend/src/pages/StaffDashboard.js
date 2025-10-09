@@ -1,5 +1,6 @@
+
 import React, { useEffect, useState } from "react";
-import { getStaffPayments, verifyPayment, sanitize } from "../services/api";
+import { getStaffPayments, verifyPayment } from "../services/api";
 import { useNavigate } from "react-router-dom";
 
 function StaffDashboard() {
@@ -14,17 +15,11 @@ function StaffDashboard() {
     const fetchPayments = async () => {
       try {
         const res = await getStaffPayments(token);
-        const sanitized = res.data.map(p => ({
-          ...p,
-          payee_account: sanitize(p.payee_account),
-          swift_code: sanitize(p.swift_code),
-        }));
-        setPayments(sanitized);
+        setPayments(res.data);
       } catch (err) {
         console.error(err);
       }
     };
-
     fetchPayments();
   }, [token, navigate]);
 
@@ -32,7 +27,7 @@ function StaffDashboard() {
     try {
       const res = await verifyPayment(id, token);
       setMessage(res.data.message);
-      setPayments(payments.map(p => p.id === id ? { ...p, verified: true } : p));
+      setPayments(prev => prev.map(p => p.id === id ? { ...p, verified: true } : p));
     } catch (err) {
       console.error(err);
     }
@@ -45,18 +40,20 @@ function StaffDashboard() {
       <table>
         <thead>
           <tr>
+            <th>ID</th>
             <th>Amount</th>
             <th>Currency</th>
             <th>Provider</th>
             <th>Payee</th>
-            <th>SWIFT</th>
+            <th>SWIFT Code</th>
             <th>Verified</th>
-            <th>Action</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           {payments.map(p => (
             <tr key={p.id}>
+              <td>{p.id}</td>
               <td>{p.amount}</td>
               <td>{p.currency}</td>
               <td>{p.provider}</td>
@@ -64,7 +61,7 @@ function StaffDashboard() {
               <td>{p.swift_code}</td>
               <td>{p.verified ? "✅" : "❌"}</td>
               <td>
-                {!p.verified && <button onClick={() => handleVerify(p.id)}>Verify</button>}
+                {!p.verified && <button onClick={() => handleVerify(p.id)}>Verify & Submit</button>}
               </td>
             </tr>
           ))}
@@ -75,3 +72,4 @@ function StaffDashboard() {
 }
 
 export default StaffDashboard;
+//staffdashboard.js

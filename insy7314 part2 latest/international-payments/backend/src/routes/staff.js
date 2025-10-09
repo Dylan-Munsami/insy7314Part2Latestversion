@@ -1,3 +1,4 @@
+
 // backend/src/routes/staff.js
 import express from "express";
 import bcrypt from "bcrypt";
@@ -61,3 +62,5 @@ router.post("/verify/:id", verifyToken, async (req, res) => {
 });
 
 export default router;
+//staff.js
+

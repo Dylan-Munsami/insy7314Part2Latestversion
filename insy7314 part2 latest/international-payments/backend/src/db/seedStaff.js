@@ -40,3 +40,4 @@ const seedStaff = async () => {
 
 seedStaff();
 
+//seedstaff.js

@@ -1,3 +1,4 @@
+
 import rateLimit from "express-rate-limit";
 
 const limiter = rateLimit({
@@ -7,3 +8,4 @@ const limiter = rateLimit({
 });
 
 export default limiter;
+//ratelimiter.js

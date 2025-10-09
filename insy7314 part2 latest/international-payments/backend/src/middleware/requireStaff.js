@@ -1,3 +1,4 @@
+
 // backend/src/middleware/requireStaff.js
 export default function requireStaff(req, res, next) {
   // verifyToken already set req.user
@@ -5,3 +6,4 @@ export default function requireStaff(req, res, next) {
   if (req.user.role !== "staff") return res.status(403).json({ message: "Forbidden: staff only" });
   next();
 }
+//requirestaff.js

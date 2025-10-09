@@ -1,3 +1,4 @@
+
 // backend/src/middleware/auth.js
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
@@ -15,3 +16,4 @@ export function verifyToken(req, res, next) {
     res.status(401).json({ message: "Invalid token" });
   }
 }
+//auth.js

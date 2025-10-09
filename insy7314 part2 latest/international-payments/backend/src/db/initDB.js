@@ -1,3 +1,4 @@
+
 // backend/src/db/initDB.js
 import { pool } from "./db.js";
 import bcrypt from "bcrypt";
@@ -65,3 +66,4 @@ export async function seedStaff() {
     console.error("❌ Error seeding staff:", err.message);
   }
 }
+//initDB.js

@@ -1,3 +1,4 @@
+
 // backend/src/validators/inputValidators.js
 import validator from "validator";
 
@@ -22,3 +23,5 @@ export function validatePayment({ amount, currency, provider, payee_account, swi
     /^[A-Z0-9]{8,11}$/.test(swift_code)
   );
 }
+//inputvalidators.js
+

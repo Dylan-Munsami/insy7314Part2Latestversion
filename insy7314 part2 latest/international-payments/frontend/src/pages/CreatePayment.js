@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { createPayment } from "../services/api";
 import { useNavigate } from "react-router-dom";
@@ -46,3 +47,4 @@ function CreatePayment() {
 }
 
 export default CreatePayment;
+//createpayment.js
