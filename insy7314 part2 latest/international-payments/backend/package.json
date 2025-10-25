@@ -10,7 +10,11 @@
     "dev:ssl": "cross-env SSL_ENABLED=true node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["banking", "payments", "api"],
+  "keywords": [
+    "banking",
+    "payments",
+    "api"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -19,7 +23,7 @@
     "cors": "^2.8.5",
     "csurf": "^1.11.0",
     "dotenv": "^17.2.3",
-    "express": "^4.21.2",  
+    "express": "^4.21.2",
     "express-rate-limit": "^8.1.0",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
@@ -28,7 +32,7 @@
     "validator": "^13.15.15"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10",
-    "cross-env": "^7.0.3"  
+    "cross-env": "^7.0.3",
+    "nodemon": "^3.1.10"
   }
 }
