@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import DOMPurify from "dompurify";
 import useHttpsCheck from "../hooks/useHttpsCheck";
 
+
 function Login() {
   useHttpsCheck(); // Check for HTTPS in production
 
