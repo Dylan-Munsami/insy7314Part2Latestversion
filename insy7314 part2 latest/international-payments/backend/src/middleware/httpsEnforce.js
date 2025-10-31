@@ -1,6 +1,4 @@
-// backend/src/middleware/httpsEnforce.js
 export default function enforceHttps(req, res, next) {
-  // Only enforce HTTPS in production
   if (
     process.env.NODE_ENV === "production" &&
     req.headers["x-forwarded-proto"] &&

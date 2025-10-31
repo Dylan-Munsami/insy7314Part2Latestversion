@@ -1,4 +1,3 @@
-// backend/src/validators/inputValidators.js
 import validator from "validator";
 
 export function validateRegistration({ full_name, id_number, account_number, password }) {
@@ -18,7 +17,7 @@ export function sanitizeRegistration(data) {
     full_name: validator.escape(data.full_name),
     id_number: validator.escape(data.id_number),
     account_number: validator.escape(data.account_number),
-    password: data.password // Password will be hashed anyway
+    password: data.password
   };
 }
 

@@ -1,51 +1,11 @@
-
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react-router-dom";
-import Register from "./pages/Register";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import CreatePayment from "./pages/CreatePayment";
 import Dashboard from "./pages/Dashboard";
 import StaffLogin from "./pages/StaffLogin";
 import StaffDashboard from "./pages/StaffDashboard";
-
-function Navbar() {
-  const navigate = useNavigate();
-  const token = localStorage.getItem("token");
-  const staffToken = localStorage.getItem("staffToken");
-
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate("/");
-  };
-
-  return (
-    <nav className="navbar">
-      <div className="nav-logo">🌍 SwiftPay</div>
-      <div className="nav-links">
-        {!token && !staffToken && (
-          <>
-            <Link className="nav-btn" to="/">Register</Link>
-            <Link className="nav-btn" to="/login">Login</Link>
-            <Link className="nav-btn" to="/staff-login">Staff Login</Link>
-          </>
-        )}
-        {token && (
-          <>
-            <Link className="nav-btn" to="/dashboard">Dashboard</Link>
-            <Link className="nav-btn" to="/create-payment">Create Payment</Link>
-            <button className="nav-btn logout" onClick={handleLogout}>Logout</button>
-          </>
-        )}
-        {staffToken && (
-          <>
-            <Link className="nav-btn" to="/staff-dashboard">Staff Dashboard</Link>
-            <button className="nav-btn logout" onClick={handleLogout}>Logout</button>
-          </>
-        )}
-      </div>
-    </nav>
-  );
-}
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
@@ -53,7 +13,7 @@ function App() {
       <Navbar />
       <div className="container">
         <Routes>
-          <Route path="/" element={<Register />} />
+          <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/create-payment" element={<CreatePayment />} />
@@ -66,4 +26,3 @@ function App() {
 }
 
 export default App;
-//app.js

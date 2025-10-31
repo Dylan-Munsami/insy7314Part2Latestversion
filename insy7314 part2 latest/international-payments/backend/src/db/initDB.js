@@ -1,5 +1,3 @@
-
-// backend/src/db/initDB.js
 import { pool } from "./db.js";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
@@ -66,4 +64,26 @@ export async function seedStaff() {
     console.error("❌ Error seeding staff:", err.message);
   }
 }
-//initDB.js
+
+// Seed customers (no registration)
+export async function seedCustomers() {
+  const customers = [
+    { full_name: "Alice Johnson", id_number: "100001", account_number: "200001", password: "CustPass1!" },
+    { full_name: "Bob Smith", id_number: "100002", account_number: "200002", password: "CustPass2!" },
+    { full_name: "Charlie Brown", id_number: "100003", account_number: "200003", password: "CustPass3!" },
+    { full_name: "Diana Prince", id_number: "100004", account_number: "200004", password: "CustPass4!" },
+    { full_name: "Ethan Hunt", id_number: "100005", account_number: "200005", password: "CustPass5!" },
+  ];
+
+  for (let cust of customers) {
+    const existing = await pool.query("SELECT * FROM customers WHERE account_number=$1", [cust.account_number]);
+    if (existing.rows.length === 0) {
+      const hash = await bcrypt.hash(cust.password, parseInt(process.env.SALT_ROUNDS || "12"));
+      await pool.query(
+        "INSERT INTO customers (full_name, id_number, account_number, password_hash) VALUES ($1,$2,$3,$4)",
+        [cust.full_name, cust.id_number, cust.account_number, hash]
+      );
+      console.log(`✅ Seeded customer: ${cust.full_name}`);
+    }
+  }
+}

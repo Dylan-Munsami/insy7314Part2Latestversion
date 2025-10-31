@@ -22,7 +22,6 @@ function CreatePayment() {
     setError("");
     setMessage("");
 
-    // Frontend validation
     if (!form.amount || form.amount <= 0) {
       setError("Please enter a valid amount greater than 0.");
       return;
@@ -44,13 +43,12 @@ function CreatePayment() {
       return;
     }
 
-try {
-  const response = await createPayment(form, token); // rename res -> response
-  setMessage(response.data.message);
-  setTimeout(() => navigate("/dashboard"), 1200);
-} catch (err) {
-  setError(err.response?.data?.message || "Payment failed");
-
+    try {
+      const response = await createPayment(form, token);
+      setMessage(response.data.message);
+      setTimeout(() => navigate("/dashboard"), 1200);
+    } catch (err) {
+      setError(err.response?.data?.message || "Payment failed");
     }
   };
 
@@ -60,43 +58,11 @@ try {
       {message && <p className="success">{message}</p>}
       {error && <p className="error">{error}</p>}
       <form onSubmit={handleSubmit}>
-        <input
-          name="amount"
-          type="number"
-          step="0.01"
-          placeholder="Amount"
-          value={form.amount}
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="currency"
-          placeholder="Currency (USD, EUR)"
-          value={form.currency}
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="provider"
-          placeholder="Provider (e.g., SWIFT)"
-          value={form.provider}
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="payee_account"
-          placeholder="Payee Account (6-30 digits)"
-          value={form.payee_account}
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="swift_code"
-          placeholder="SWIFT Code (8-11 letters/numbers)"
-          value={form.swift_code}
-          onChange={handleChange}
-          required
-        />
+        <input name="amount" type="number" step="0.01" placeholder="Amount" value={form.amount} onChange={handleChange} required />
+        <input name="currency" placeholder="Currency (USD, EUR)" value={form.currency} onChange={handleChange} required />
+        <input name="provider" placeholder="Provider (e.g., SWIFT)" value={form.provider} onChange={handleChange} required />
+        <input name="payee_account" placeholder="Payee Account (6-30 digits)" value={form.payee_account} onChange={handleChange} required />
+        <input name="swift_code" placeholder="SWIFT Code (8-11 letters/numbers)" value={form.swift_code} onChange={handleChange} required />
         <button type="submit">Pay Now</button>
       </form>
     </div>
