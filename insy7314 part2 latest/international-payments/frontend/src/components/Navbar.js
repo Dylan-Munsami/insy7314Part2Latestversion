@@ -7,7 +7,8 @@ function Navbar() {
   const staffToken = localStorage.getItem("staffToken");
 
   const handleLogout = () => {
-    localStorage.clear();
+    localStorage.removeItem("token");
+    localStorage.removeItem("staffToken");
     navigate("/login");
   };
 

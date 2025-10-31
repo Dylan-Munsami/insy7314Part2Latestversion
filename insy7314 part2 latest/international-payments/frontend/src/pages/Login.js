@@ -1,18 +1,24 @@
 import React, { useState } from "react";
 import { loginUser } from "../services/api";
 import { useNavigate } from "react-router-dom";
+import DOMPurify from "dompurify";
+import useHttpsCheck from "../hooks/useHttpsCheck";
 
 function Login() {
+  useHttpsCheck(); // Check for HTTPS in production
+
   const [form, setForm] = useState({ account_number: "", password: "" });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: DOMPurify.sanitize(e.target.value) });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    setError(""); 
     setSuccess("");
 
     if (!form.account_number || !form.password) {
@@ -22,11 +28,13 @@ function Login() {
 
     try {
       const res = await loginUser(form);
-      localStorage.setItem("token", res.data.token);
+      const token = DOMPurify.sanitize(res.data.token);
+      localStorage.setItem("token", token);
       setSuccess("✅ Login successful! Redirecting...");
       setTimeout(() => navigate("/dashboard"), 1000);
     } catch (err) {
-      setError(err.response?.data?.message || "Invalid credentials.");
+      const msg = DOMPurify.sanitize(err.response?.data?.message || "Invalid credentials.");
+      setError(msg);
     }
   };
 
