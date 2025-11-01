@@ -17,7 +17,7 @@ jobs:
           name: Build app
           command: npm run build
       - sonarcloud/scan:
-          sonar_token: "59564c9cc73ed03abeae872e841e1286828c169a"
+          sonar_token: "$SONAR_TOKEN 
           organization: "dylan-munsami"
           project_key: "Dylan-Munsami_insy7314Part2Latestversion"
 
