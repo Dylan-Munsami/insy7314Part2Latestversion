@@ -26,7 +26,6 @@ app.use(sanitizeInputs);
 app.use(secureHeaders);
 app.use(limiter);
 
-<<<<<<< HEAD
 
 
 app.use(
@@ -37,8 +36,6 @@ app.use(
   })
 );
 
-=======
->>>>>>> upstream/main
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/payments", paymentRoutes);
