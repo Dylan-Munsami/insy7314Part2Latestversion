@@ -26,10 +26,8 @@ jobs:
           name: Run tests
           command: cd "insy7314 part2 latest/international-payments/backend" && npm test || echo "⚠️ No tests to run, skipping..."
 
-      # SonarCloud scan (uses your environment variables)
-      - run:
-          name: Run SonarCloud scan
-          command: cd "insy7314 part2 latest/international-payments/backend" && sonar-scanner
+      # Run SonarCloud scan (uses your CircleCI environment variables)
+      - sonarcloud/scan
 
 workflows:
   version: 2
