@@ -14,12 +14,16 @@ jobs:
       # Install dependencies in backend
       - run:
           name: Install dependencies
-          command: cd "insy7314 part2 latest/international-payments/backend" && npm install
+          command: |
+            cd "insy7314 part2 latest/international-payments/backend"
+            npm install
 
       # Build the backend (optional)
       - run:
           name: Build backend
-          command: cd "insy7314 part2 latest/international-payments/backend" && npm run build || echo "⚠️ No build script, skipping"
+          command: |
+            cd "insy7314 part2 latest/international-payments/backend"
+            npm run build || echo "⚠️ No build script, skipping"
 
       # Run backend tests and generate coverage
       - run:
@@ -40,7 +44,6 @@ jobs:
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
 
 workflows:
-  version: 2
   main:
     jobs:
       - build-and-scan
