@@ -26,8 +26,11 @@ jobs:
           name: Run tests
           command: cd "insy7314 part2 latest/international-payments/backend" && npm test || echo "⚠️ No tests to run, skipping"
 
-      # Run SonarCloud scan using environment variables
-      - sonarcloud/scan
+      # Run SonarCloud scan with proper configuration
+      - sonarcloud/scan:
+          projectBaseDir: "insy7314 part2 latest/international-payments/backend"
+          organization: "$SONAR_ORGANIZATION" 
+          projectKey: "$SONAR_PROJECT_KEY"
 
 workflows:
   version: 2
