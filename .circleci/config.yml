@@ -31,6 +31,16 @@ jobs:
             cd "insy7314 part2 latest/international-payments/backend"
             npm test -- --coverage --watchAll=false || echo "⚠️ Tests may have failed, continuing..."
 
+
+- run:
+    name: Check environment variables
+    command: |
+      echo "SONAR_PROJECT_KEY is set: ${SONAR_PROJECT_KEY:+yes}"
+      echo "SONAR_ORGANIZATION is set: ${SONAR_ORGANIZATION:+yes}"
+      # Do NOT echo the token directly!
+      echo "SONAR_TOKEN is set: ${SONAR_TOKEN:+yes}"
+
+
       # Download and run SonarScanner CLI manually
       - run:
           name: Run SonarCloud scan
