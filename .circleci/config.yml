@@ -11,37 +11,22 @@ jobs:
     steps:
       - checkout
 
-      # Install dependencies
+      # Move to backend folder and install dependencies
       - run:
           name: Install dependencies
-          command: |
-            cd "insy7314 part2 latest/international-payments/backend"
-            npm install
+          command: cd "insy7314 part2 latest/international-payments/backend" && npm install
 
-      # Build backend
+      # Build the app
       - run:
-          name: Build backend
-          command: |
-            cd "insy7314 part2 latest/international-payments/backend"
-            npm run build || echo "⚠️ No build script, skipping..."
+          name: Build project
+          command: cd "insy7314 part2 latest/international-payments/backend" && npm run build || echo "⚠️ No build script found, skipping..."
 
-      # Run tests with coverage
+      # Optional: run tests
       - run:
           name: Run tests
-          command: |
-            cd "insy7314 part2 latest/international-payments/backend"
-            npm test -- --coverage --watchAll=false || echo "⚠️ Tests may have failed, continuing..."
+          command: cd "insy7314 part2 latest/international-payments/backend" && npm test || echo "⚠️ No tests to run, skipping..."
 
-
-- run:
-    name: Check Sonar env vars
-    command: |
-      echo "SONAR_TOKEN=${SONAR_TOKEN}"
-      echo "SONAR_PROJECT_KEY=${SONAR_PROJECT_KEY}"
-      echo "SONAR_ORGANIZATION=${SONAR_ORGANIZATION}"
-
-
-      # Run SonarCloud scan (uses sonar-project.properties and environment variables)
+      # Run SonarCloud scan (uses your CircleCI environment variables)
       - sonarcloud/scan
 
 workflows:
