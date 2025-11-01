@@ -33,20 +33,25 @@ jobs:
 
       # Debug environment variables
       - run:
-          name: Debug SonarCloud environment variables
+          name: Check SonarCloud environment variables
           command: |
             echo "SONAR_PROJECT_KEY: $SONAR_PROJECT_KEY"
             echo "SONAR_ORGANIZATION: $SONAR_ORGANIZATION"
             echo "SONAR_TOKEN: ${SONAR_TOKEN:0:4}... (hidden for security)"
 
-      # Install SonarScanner locally and run
+      # Download and run official SonarScanner CLI
       - run:
-          name: Install SonarScanner and run scan
+          name: Install and run SonarScanner CLI
           command: |
+            SCANNER_VERSION=5.0.1.3006
+            SCANNER_DIR=/tmp/sonar-scanner
+            mkdir -p $SCANNER_DIR
+            curl -Lo $SCANNER_DIR/sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SCANNER_VERSION-linux.zip
+            unzip -q -o $SCANNER_DIR/sonar-scanner.zip -d $SCANNER_DIR
+            chmod +x $SCANNER_DIR/sonar-scanner-$SCANNER_VERSION-linux/bin/sonar-scanner
+
             cd "insy7314 part2 latest/international-payments/backend"
-            npm install sonar-scanner --no-save
-            chmod +x ./node_modules/.bin/sonar-scanner
-            ./node_modules/.bin/sonar-scanner \
+            $SCANNER_DIR/sonar-scanner-$SCANNER_VERSION-linux/bin/sonar-scanner \
               -Dsonar.projectKey=$SONAR_PROJECT_KEY \
               -Dsonar.organization=$SONAR_ORGANIZATION \
               -Dsonar.sources=src \
