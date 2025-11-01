@@ -26,7 +26,7 @@ const SSL_ENABLED = process.env.SSL_ENABLED === "true";
     );
 
     const redirectApp = express();
-    redirectApp.use((req, res) => res.redirect(`https://localhost:${SSL_PORT}${req.url}`));
+    redirectApp.use((req, res) => res.redirect(`https://localhost:${SSL_PORT}/`));
     http.createServer(redirectApp).listen(PORT, () => console.log(`🔁 HTTP redirect running on port ${PORT}`));
   } else {
     http.createServer(app).listen(PORT, () =>
