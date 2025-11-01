@@ -27,8 +27,7 @@ jobs:
           command: cd "insy7314 part2 latest/international-payments/backend" && npm test || echo "⚠️ No tests to run, skipping"
 
       # Run SonarCloud scan using environment variables
-      - sonarcloud/scan:
-          sonar_token: $SONAR_TOKEN
+      - sonarcloud/scan
 
 workflows:
   version: 2
