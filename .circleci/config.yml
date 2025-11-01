@@ -10,36 +10,43 @@ jobs:
     steps:
       - checkout
 
+      # Install dependencies
       - run:
           name: Install dependencies
           command: |
             cd "insy7314 part2 latest/international-payments/backend"
             npm install
 
+      # Build backend
       - run:
           name: Build backend
           command: |
             cd "insy7314 part2 latest/international-payments/backend"
             npm run build || echo "⚠️ No build script, skipping"
 
+      # Run tests with coverage
       - run:
-          name: Run tests with coverage
+          name: Run tests
           command: |
             cd "insy7314 part2 latest/international-payments/backend"
             npm test -- --coverage --watchAll=false || echo "⚠️ Tests may have failed, continuing..."
 
+      # Debug environment variables
       - run:
-          name: Check environment variables
+          name: Debug SonarCloud environment variables
           command: |
-            echo "SONAR_PROJECT_KEY is set: ${SONAR_PROJECT_KEY:+yes}"
-            echo "SONAR_ORGANIZATION is set: ${SONAR_ORGANIZATION:+yes}"
-            echo "SONAR_TOKEN is set: ${SONAR_TOKEN:+yes}"
+            echo "SONAR_PROJECT_KEY: $SONAR_PROJECT_KEY"
+            echo "SONAR_ORGANIZATION: $SONAR_ORGANIZATION"
+            echo "SONAR_TOKEN: ${SONAR_TOKEN:0:4}... (hidden for security)"
 
+      # Install SonarScanner locally and run
       - run:
-          name: Run SonarScanner manually
+          name: Install SonarScanner and run scan
           command: |
             cd "insy7314 part2 latest/international-payments/backend"
-            npx sonar-scanner \
+            npm install sonar-scanner --no-save
+            chmod +x ./node_modules/.bin/sonar-scanner
+            ./node_modules/.bin/sonar-scanner \
               -Dsonar.projectKey=$SONAR_PROJECT_KEY \
               -Dsonar.organization=$SONAR_ORGANIZATION \
               -Dsonar.sources=src \
