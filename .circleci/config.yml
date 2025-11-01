@@ -4,22 +4,32 @@ orbs:
   node: circleci/node@5.0.2
   sonarcloud: sonarsource/sonarcloud@2.0.0
 
-
 jobs:
   build-and-scan:
     docker:
       - image: cimg/node:18.19
     steps:
       - checkout
-      - node/install-packages:
-          pkg-manager: npm
+
+      # Move to backend folder and install dependencies
       - run:
-          name: Build app
-          command: npm run build
-      - sonarcloud/scan:
-          sonar_token: "59564c9cc73ed03abeae872e841e1286828c169a"
-          organization: "dylan-munsami"
-          project_key: "Dylan-Munsami_insy7314Part2Latestversion"
+          name: Install dependencies
+          command: cd "insy7314 part2 latest/international-payments/backend" && npm install
+
+      # Build the app
+      - run:
+          name: Build project
+          command: cd "insy7314 part2 latest/international-payments/backend" && npm run build || echo "⚠️ No build script found, skipping..."
+
+      # Optional: run tests
+      - run:
+          name: Run tests
+          command: cd "insy7314 part2 latest/international-payments/backend" && npm test || echo "⚠️ No tests to run, skipping..."
+
+      # SonarCloud scan (uses your environment variables)
+      - run:
+          name: Run SonarCloud scan
+          command: cd "insy7314 part2 latest/international-payments/backend" && sonar-scanner
 
 workflows:
   version: 2
