@@ -16,20 +16,18 @@ jobs:
           name: Install dependencies
           command: npm install
 
-      # Build the project
+      # Build the app
       - run:
           name: Build project
           command: npm run build || echo "⚠️ No build script found, skipping..."
 
-      # Run tests (optional)
+      # Optional: run tests
       - run:
           name: Run tests
           command: npm test || echo "⚠️ No tests to run, skipping..."
 
-      # Run SonarCloud scan with env vars
-      - sonarcloud/scan:
-          projectKey: "Dylan-Munsami_insy7314Part2Latestversion"
-          organization: "dylan-munsami"
+      # SonarCloud scan (uses env vars)
+      - sonarcloud/scan
 
 workflows:
   version: 2
