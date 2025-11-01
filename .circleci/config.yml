@@ -4,7 +4,6 @@ orbs:
   node: circleci/node@5.0.2
   sonarcloud: sonarsource/sonarcloud@2.0.0
 
-
 jobs:
   build-and-scan:
     docker:
@@ -17,9 +16,9 @@ jobs:
           name: Build app
           command: npm run build
       - sonarcloud/scan:
-          sonar_token: "$SONAR_TOKEN 
-          organization: "dylan-munsami"
-          project_key: "Dylan-Munsami_insy7314Part2Latestversion"
+          sonar_token: $SONAR_TOKEN          
+          organization: dylan-munsami
+          project_key: Dylan-Munsami_insy7314Part2Latestversion
 
 workflows:
   version: 2
