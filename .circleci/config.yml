@@ -38,13 +38,14 @@ jobs:
 
             cd "insy7314 part2 latest/international-payments/backend"
 
-            $SCANNER_DIR/sonar-scanner-$SCANNER_VERSION-linux/bin/sonar-scanner \
-              -Dsonar.projectKey=$SONAR_PROJECT_KEY \
-              -Dsonar.organization=$SONAR_ORGANIZATION \
-              -Dsonar.sources=src \
-              -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
-              -Dsonar.host.url=https://sonarcloud.io \
-              -Dsonar.login=$SONAR_TOKEN
+          $SCANNER_DIR/sonar-scanner-$SCANNER_VERSION-linux/bin/sonar-scanner \
+  -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+  -Dsonar.organization=$SONAR_ORGANIZATION \
+  -Dsonar.sources=src \
+  -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+  -Dsonar.host.url=https://sonarcloud.io \
+  -Dsonar.login=$SONAR_TOKEN
+
 
 workflows:
   version: 2
