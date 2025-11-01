@@ -21,6 +21,17 @@ jobs:
           name: Build project
           command: npm run build || echo "⚠️ No build script found, skipping..."
 
+- run:
+    name: Install dependencies
+    command: cd "insy7314 part2 latest/international-payments/backend" && npm install
+- run:
+    name: Build
+    command: cd "insy7314 part2 latest/international-payments/backend" && npm run build
+- run:
+    name: Scan
+    command: cd "insy7314 part2 latest/international-payments/backend" && sonar-scanner
+
+
       # Optional: run tests
       - run:
           name: Run tests
