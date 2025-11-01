@@ -11,34 +11,25 @@ jobs:
     steps:
       - checkout
 
-      # Install dependencies
+      # Move to backend folder and install dependencies
       - run:
           name: Install dependencies
-          command: npm install
+          command: cd "insy7314 part2 latest/international-payments/backend" && npm install
 
       # Build the app
       - run:
           name: Build project
-          command: npm run build || echo "⚠️ No build script found, skipping..."
-
-- run:
-    name: Install dependencies
-    command: cd "insy7314 part2 latest/international-payments/backend" && npm install
-- run:
-    name: Build
-    command: cd "insy7314 part2 latest/international-payments/backend" && npm run build
-- run:
-    name: Scan
-    command: cd "insy7314 part2 latest/international-payments/backend" && sonar-scanner
-
+          command: cd "insy7314 part2 latest/international-payments/backend" && npm run build || echo "⚠️ No build script found, skipping..."
 
       # Optional: run tests
       - run:
           name: Run tests
-          command: npm test || echo "⚠️ No tests to run, skipping..."
+          command: cd "insy7314 part2 latest/international-payments/backend" && npm test || echo "⚠️ No tests to run, skipping..."
 
-      # SonarCloud scan (uses env vars)
-      - sonarcloud/scan
+      # SonarCloud scan (uses your environment variables)
+      - run:
+          name: Run SonarCloud scan
+          command: cd "insy7314 part2 latest/international-payments/backend" && sonar-scanner
 
 workflows:
   version: 2
