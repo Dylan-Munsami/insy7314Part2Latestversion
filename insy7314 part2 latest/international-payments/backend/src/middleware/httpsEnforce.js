@@ -4,10 +4,15 @@ export default function enforceHttps(req, res, next) {
     req.headers['x-forwarded-proto'] &&
     req.headers['x-forwarded-proto'] !== 'https'
   ) {
-    const host = req.headers.host;  // trusted
-    const path = req.path || '/';   // safe path only
+    const host = req.headers.host;
+    const path = req.path || '/';
 
-    return res.redirect(301, `https://${host}${path}`);
+    // Encode query parameters safely
+    const query = Object.keys(req.query).length
+      ? `?${new URLSearchParams(req.query).toString()}`
+      : '';
+
+    return res.redirect(301, `https://${host}${path}${query}`);
   }
   next();
 }
