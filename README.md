@@ -115,11 +115,77 @@ Green pipelines indicate integrity before deployment
 Automated checks enforce that insecure code cannot move forward
 
 
+
+
+***-Security Enhancements & Remediation Based on Feedback-**
+
+During the review phase, several security gaps were identified and remediated successfully to strengthen the overall security posture of the International Payments Platform:
+
+Middleware & App Hardening Improvements
+
+Implemented helmet and express-rate-limit to protect against common web vulnerabilities and brute-force frequency attacks.
+
+Updated CORS configuration from * (overly permissive) → to restricted trusted domain access.
+
+Implemented stricter JWT settings ensuring tokens include expiration and cannot be reused after session validity.
+
+Added HTTPS enforcement to ensure all data in transit is encrypted end-to-end.
+
+Added missing CSRF and XSS protection through appropriate middleware controls to sanitize incoming requests and prevent script injection.
+
+Input Validation & Data Protection
+
+Implemented a centralized request validator module.
+
+Applied strict REGEX patterns to all user fields (including account numbers, amounts, SWIFT codes, etc.)
+
+Standardized validation error responses using structured JSON output rather than generic messages.
+
+Increased password security standards and enforced password complexity rules.
+
+Updated bcrypt configuration to use .env controlled salt rounds for hashing instead of hardcoded values.
+
+Authentication / Flow Adjustments
+
+Removed the public self-registration route entirely.
+
+Users can no longer create accounts on the platform directly — only admin/staff can provision accounts.
+
+This prevents fraudulent sign up attempts, lowers attack surface, and aligns platform usage to the intended controlled environment model.
+
+These changes collectively resolve all feedback previously reported and ensure the platform now exceeds the POE’s security criteria standard, demonstrating corrective improvement, DevSecOps maturity and secure coding best practices.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 **POE Evidence Screenshot**
 
 
 #### CircleCI Main Pipeline Success
 ![image alt](https://github.com/IdrisK825/insy7314Part2Latestversion/blob/00d67b156d08adaa3f0c7391b552dfc2b8b4d51e/circleci_main_pipeline_success.png.jpg)
+This screenshot proves that the CI/CD pipeline executes on the main branch successfully. It confirms that every commit pushed to the repository is automatically validated, built and tested before it can be considered stable. This ensures continuous integration compliance and enforces secure code delivery.
+
+
+
 
 
 
@@ -127,28 +193,31 @@ Automated checks enforce that insecure code cannot move forward
 #### Pipeline History / Multiple Runs Successful
 
 ![image alt](https://github.com/IdrisK825/insy7314Part2Latestversion/blob/00d67b156d08adaa3f0c7391b552dfc2b8b4d51e/circleci_pipeline_runs_list.jpg)
+This screenshot shows historical pipeline execution history with multiple green builds. This demonstrates pipeline stability and consistency over time. The app is not only secure once off, but proves repeatable integrity and reliability through continuous runs.
+
+
 
 #### Latest Pipeline Success (Re-run Verification)
 
 ![image alt](https://github.com/IdrisK825/insy7314Part2Latestversion/blob/00d67b156d08adaa3f0c7391b552dfc2b8b4d51e/circleci_pipeline_success_last_run.jpg)
-
+This screenshot shows that even when the pipeline is re-triggered manually, it continues to pass successfully. This verifies that the pipeline is deterministic and not dependent on local machines or temporary runtime states.
 
 #### CircleCI Build Steps
 ![image alt](https://github.com/IdrisK825/insy7314Part2Latestversion/blob/a65b6be2656be4b45892843413b4b92af7c49c1d/circleci_build_steps.jpg)
-
+This screenshot provides evidence of each build stage such as environment setup, dependency installation, test execution, and artifact generation. Each stage is executed inside a controlled isolated CI environment which ensures repeatable, secure and clean builds.
 
 #### Deep Step Detail
 ![image alt](https://github.com/IdrisK825/insy7314Part2Latestversion/blob/00d67b156d08adaa3f0c7391b552dfc2b8b4d51e/circleci_step_expanded_1.jpg)
-
+This screenshot shows deeper inspection of a pipeline process step. Reviewing internal pipeline steps ensures visibility into environment variables usage, dependency injection and build transparency – a requirement for DevSecOps traceability.
 
 #### GitHub Checks Passed
 ![image alt](https://github.com/IdrisK825/insy7314Part2Latestversion/blob/00d67b156d08adaa3f0c7391b552dfc2b8b4d51e/github_checks_passed.jpg)
-
+This screenshot shows that GitHub enforces CI checks before allowing code acceptance on the repo. Code cannot be merged unless all pipeline + security checks succeed. This protects against insecure or broken code being deployed to production.
 
 
 #### SonarCloud Main Branch Passed
 ![image alt](https://github.com/IdrisK825/insy7314Part2Latestversion/blob/00d67b156d08adaa3f0c7391b552dfc2b8b4d51e/sonarcloud_main_branch_passed.jpg)
-
+This screenshot shows that static code analysis results for the main branch passed with no security critical issues. SonarCloud validates code quality, security vulnerabilities and code smells, ensuring the backend source code adheres to safe development standards.
 
 
 
