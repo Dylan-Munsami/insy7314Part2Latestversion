@@ -3,8 +3,8 @@ function isSafePath(p) {
   if (typeof p !== 'string' || p.length === 0) return false;
   // Must start with single slash and not start with '//' (no protocol-relative or host)
   if (!p.startsWith('/') || p.startsWith('//')) return false;
-  // Disallow CR/LF or null bytes
-  if (/[\\\r\n\x00]/.test(p)) return false;
+  // Disallow CR/LF or null bytes - fixed: removed backslash from character class
+  if (/[\r\n\x00]/.test(p)) return false;
   // Allow only a safe subset of characters in the path.
   // This allows percent-encoded chars (%20), alphanumerics and common path characters.
   // Adjust charset if your app needs other characters.
@@ -32,16 +32,13 @@ export default function enforceHttps(req, res, next) {
     if (!safeHost) {
       return res.status(400).send('Invalid host header');
     }
-
     // Validate and sanitize path before use
     const rawPath = req.path || '/';
     const safePath = isSafePath(rawPath) ? rawPath : '/';
-
     // Build safe query string: URLSearchParams encodes keys/values
     const query = Object.keys(req.query).length
       ? `?${new URLSearchParams(req.query).toString()}`
       : '';
-
     // Final redirect uses only validated host and path; query is encoded
     return res.redirect(301, `https://${safeHost}${safePath}${query}`);
   }
