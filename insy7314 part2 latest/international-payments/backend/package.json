@@ -4,12 +4,14 @@
   "description": "International Payments Backend",
   "type": "module",
   "main": "src/index.js",
-  "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
-    "dev:ssl": "cross-env SSL_ENABLED=true node src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+ "scripts": {
+  "start": "node src/index.js",
+  "dev": "nodemon src/index.js",
+  "dev:ssl": "cross-env SSL_ENABLED=true node src/index.js",
+  "test": "jest --coverage",
+  "test:watch": "jest --watch"
+},
+
   "keywords": [
     "banking",
     "payments",
