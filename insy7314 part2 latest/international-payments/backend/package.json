@@ -8,10 +8,9 @@
   "start": "node src/index.js",
   "dev": "nodemon src/index.js",
   "dev:ssl": "cross-env SSL_ENABLED=true node src/index.js",
-  "test": "jest --coverage",
-  "test:watch": "jest --watch"
-},
-
+  "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage"
+}
+,
   "keywords": [
     "banking",
     "payments",
@@ -38,7 +37,12 @@
     "xss-clean": "^0.1.4"
   },
   "devDependencies": {
+    "@babel/core": "^7.28.5",
+    "@babel/preset-env": "^7.28.5",
+    "babel-jest": "^30.2.0",
     "cross-env": "^7.0.3",
-    "nodemon": "^3.1.10"
+    "jest": "^30.2.0",
+    "nodemon": "^3.1.10",
+    "supertest": "^7.1.4"
   }
 }
