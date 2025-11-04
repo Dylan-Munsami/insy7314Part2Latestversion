@@ -1,11 +1,8 @@
 version: 2.1
 
-<<<<<<< HEAD
 orbs:
   node: circleci/node@5.0.2
 
-=======
->>>>>>> 2397936d214baacdea85451ebc5033e28525a367
 jobs:
   build-and-scan:
     docker:
@@ -13,69 +10,33 @@ jobs:
     steps:
       - checkout
 
-<<<<<<< HEAD
       # Install dependencies
-=======
->>>>>>> 2397936d214baacdea85451ebc5033e28525a367
       - run:
           name: Install dependencies
           command: |
             cd "insy7314 part2 latest/international-payments/backend"
             npm install
 
-<<<<<<< HEAD
       # Build backend
-=======
->>>>>>> 2397936d214baacdea85451ebc5033e28525a367
       - run:
           name: Build backend
           command: |
             cd "insy7314 part2 latest/international-payments/backend"
-<<<<<<< HEAD
             npm run build || echo "⚠️ No build script, skipping..."
 
       # Run tests with coverage
       - run:
           name: Run tests
-=======
-            npm run build || echo "⚠️ No build script, skipping"
-
-      - run:
-          name: Run tests with coverage
->>>>>>> 2397936d214baacdea85451ebc5033e28525a367
           command: |
             cd "insy7314 part2 latest/international-payments/backend"
             npm test -- --coverage --watchAll=false || echo "⚠️ Tests may have failed, continuing..."
 
-<<<<<<< HEAD
       # Run SonarScanner using the properties file and environment token
       - run:
           name: Run SonarScanner
           command: |
             cd "insy7314 part2 latest/international-payments/backend"
             npx sonar-scanner -Dsonar.login=$SONAR_TOKEN
-=======
-      - run:
-          name: Run SonarCloud Scanner
-          command: |
-            SCANNER_VERSION=5.0.1.3006
-            SCANNER_DIR=/tmp/sonar-scanner
-
-            mkdir -p $SCANNER_DIR
-            curl -Lo $SCANNER_DIR/sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SCANNER_VERSION-linux.zip
-            unzip -q -o $SCANNER_DIR/sonar-scanner.zip -d $SCANNER_DIR
-            chmod +x $SCANNER_DIR/sonar-scanner-$SCANNER_VERSION-linux/bin/sonar-scanner
-
-            cd "insy7314 part2 latest/international-payments/backend"
-
-            $SCANNER_DIR/sonar-scanner-$SCANNER_VERSION-linux/bin/sonar-scanner \
-              -Dsonar.projectKey=$SONAR_PROJECT_KEY \
-              -Dsonar.organization=$SONAR_ORGANIZATION \
-              -Dsonar.sources=src \
-              -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
-              -Dsonar.host.url=https://sonarcloud.io \
-              -Dsonar.login=$SONAR_TOKEN
->>>>>>> 2397936d214baacdea85451ebc5033e28525a367
 
 workflows:
   version: 2
