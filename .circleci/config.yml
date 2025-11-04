@@ -14,7 +14,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            cd "insy7314 part2 latest/international-payments"
+            cd "insy7314 part2 latest/international-payments/backend"
             npm install
 
       # Build backend
@@ -31,12 +31,21 @@ jobs:
             cd "insy7314 part2 latest/international-payments/backend"
             npm test -- --coverage --watchAll=false || echo "⚠️ Tests may have failed, continuing..."
 
+      # Set up environment for SonarScanner
+      - run:
+          name: Setup SonarScanner environment
+          command: |
+            cd "insy7314 part2 latest/international-payments/backend"
+            export TMPDIR=$PWD/.tmp
+            mkdir -p "$TMPDIR"
+
       # Run SonarScanner using the properties file and environment token
       - run:
           name: Run SonarScanner
           command: |
             cd "insy7314 part2 latest/international-payments/backend"
-            npx sonar-scanner -Dsonar.login=$SONAR_TOKEN
+            export TMPDIR=$PWD/.tmp
+            npx --yes --prefix . --cache "$TMPDIR/.npm" --tmp "$TMPDIR" sonar-scanner@5.0.1.3006 -Dsonar.login=$SONAR_TOKEN
 
 workflows:
   version: 2
