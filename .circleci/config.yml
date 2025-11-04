@@ -39,7 +39,7 @@ jobs:
             # Install a valid version of sonar‑scanner (or equivalent)
             npm install sonarqube-scanner@4.3.0 --no-save
             # Run the scanner with your SONAR_TOKEN
-            npx sonarqube-scanner -Dsonar.login="$SONAR_TOKEN"
+            npx sonarqube-scanner -Dsonar.token="$SONAR_TOKEN"
 
 workflows:
   version: 2
