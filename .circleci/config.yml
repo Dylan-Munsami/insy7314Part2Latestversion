@@ -22,21 +22,24 @@ jobs:
           name: Build backend
           command: |
             cd "insy7314 part2 latest/international-payments/backend"
-            npm run build || echo "⚠️ No build script, skipping..."
+            npm run build || echo "No build script, skipping..."
 
       # Run tests with coverage
       - run:
           name: Run tests
           command: |
             cd "insy7314 part2 latest/international-payments/backend"
-            npm test -- --coverage --watchAll=false || echo "⚠️ Tests may have failed, continuing..."
+            npm test -- --coverage --watchAll=false || echo "Tests may have failed, continuing..."
 
-      # Run SonarScanner using the properties file and environment token
+      # Run SonarScanner (local install, avoids npx temp dir issues)
       - run:
           name: Run SonarScanner
           command: |
             cd "insy7314 part2 latest/international-payments/backend"
-            npx sonar-scanner -Dsonar.login=$SONAR_TOKEN
+            # Install sonar-scanner locally without saving to package.json
+            npm install sonar-scanner@5.0.1.3006 --no-save
+            # Run the scanner with your SONAR_TOKEN
+            npx sonar-scanner -Dsonar.login="$SONAR_TOKEN"
 
 workflows:
   version: 2
