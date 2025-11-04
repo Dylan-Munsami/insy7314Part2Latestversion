@@ -31,32 +31,13 @@ jobs:
             cd "insy7314 part2 latest/international-payments/backend"
             npm test -- --coverage --watchAll=false || echo "Tests may have failed, continuing..."
 
-<<<<<<< HEAD
       # Run SonarScanner (local install, avoids npx temp dir issues)
-=======
-      # Set up environment for SonarScanner
-      - run:
-          name: Setup SonarScanner environment
-          command: |
-            cd "insy7314 part2 latest/international-payments/backend"
-            export TMPDIR=$PWD/.tmp
-            mkdir -p "$TMPDIR"
-
-      # Run SonarScanner using the properties file and environment token
->>>>>>> 50ade552524e4d9b5d852344a82ea74d01bb4afd
       - run:
           name: Run SonarScanner
           command: |
             cd "insy7314 part2 latest/international-payments/backend"
-<<<<<<< HEAD
-            # Install sonar-scanner locally without saving to package.json
             npm install sonar-scanner@5.0.1.3006 --no-save
-            # Run the scanner with your SONAR_TOKEN
             npx sonar-scanner -Dsonar.login="$SONAR_TOKEN"
-=======
-            export TMPDIR=$PWD/.tmp
-            npx --yes --prefix . --cache "$TMPDIR/.npm" --tmp "$TMPDIR" sonar-scanner@5.0.1.3006 -Dsonar.login=$SONAR_TOKEN
->>>>>>> 50ade552524e4d9b5d852344a82ea74d01bb4afd
 
 workflows:
   version: 2
