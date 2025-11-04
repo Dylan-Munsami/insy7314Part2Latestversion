@@ -36,10 +36,12 @@ jobs:
           name: Run SonarScanner
           command: |
             cd "insy7314 part2 latest/international-payments/backend"
-            PROJECT_DIR=$(pwd)
+            PROJECT_DIR="$(pwd)"
             TMPDIR="$PROJECT_DIR/.tmp"
             mkdir -p "$TMPDIR"
-            npx --yes --prefix "$PROJECT_DIR" --cache "$TMPDIR/.npm" --tmp "$TMPDIR" sonar-scanner@5.0.1.3006 \
+            echo "Running SonarScanner from: $PROJECT_DIR"
+            npx --yes --prefix "$PROJECT_DIR" --cache "$TMPDIR/.npm" --tmp "$TMPDIR" \
+              --package sonar-scanner@5.0.1.3006 sonar-scanner \
               -Dsonar.login="$SONAR_TOKEN"
 
 workflows:
