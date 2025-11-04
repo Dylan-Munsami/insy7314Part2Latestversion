@@ -4,9 +4,11 @@ export default function enforceHttps(req, res, next) {
     req.headers["x-forwarded-proto"] &&
     req.headers["x-forwarded-proto"] !== "https"
   ) {
-    
-    const secureDomain = process.env.SECURE_DOMAIN || 'your-secure-domain.com';
-    return res.redirect(301, `https://${secureDomain}${req.url}`);
+    // Construct safe redirect using the host header (trusted by the server) and path
+    const host = req.headers.host; 
+    const safePath = req.path;    
+
+    return res.redirect(301, `https://${host}${safePath}`);
   }
   next();
 }
