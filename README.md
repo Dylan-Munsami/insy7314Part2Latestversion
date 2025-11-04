@@ -117,6 +117,10 @@ Automated checks enforce that insecure code cannot move forward
 
 **POE Evidence Screenshot**
 
+![image alt](https://github.com/IdrisK825/insy7314Part2Latestversion/blob/a65b6be2656be4b45892843413b4b92af7c49c1d/circleci_build_steps.jpg)
+
+
+
 
 
 
