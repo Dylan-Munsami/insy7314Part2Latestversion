@@ -12,10 +12,12 @@ export function validatePayment({ amount, currency, provider, payee_account, swi
 
 export function sanitizePayment(data) {
   return {
-    amount: data.amount,
-    currency: validator.escape(data.currency),
-    provider: validator.escape(data.provider),
-    payee_account: validator.escape(data.payee_account),
-    swift_code: validator.escape(data.swift_code)
+    amount: data.amount ?? 0,
+    currency: validator.escape(data.currency ?? ''),
+    provider: validator.escape(data.provider ?? ''),
+    payee_account: validator.escape(data.payee_account ?? ''),
+    swift_code: validator.escape(data.swift_code ?? '')
   };
 }
+
+

@@ -3,6 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 
 import authRoutes from "./routes/auth.js";
+import staffRoutes from './routes/staff.js';
 import paymentRoutes from "./routes/payments.js";
 import enforceHttps from "./middleware/httpsEnforce.js";
 import {
@@ -36,6 +37,7 @@ app.use(
 // --- Routes ---
 app.use("/api/auth", authRoutes);       // router handles /login internally
 app.use("/api/payments", paymentRoutes); // same logic for payments router
+app.use('/api/staff', staffRoutes); 
 
 app.get("/", (req, res) =>
   res.send("🌍 International Payments API running securely!")
