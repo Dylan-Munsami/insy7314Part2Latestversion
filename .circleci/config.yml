@@ -31,15 +31,15 @@ jobs:
             cd "insy7314 part2 latest/international-payments/backend"
             npm test -- --coverage --watchAll=false || echo "⚠️ Tests may have failed, continuing..."
 
-  - run:
-    name: Run SonarScanner
-    command: |
-      cd "insy7314 part2 latest/international-payments/backend"
-      export TMPDIR=$PWD/.tmp
-      mkdir -p $TMPDIR
-      npx --yes --cache $TMPDIR/.npm --tmp $TMPDIR sonar-scanner \
-        -Dsonar.login=$SONAR_TOKEN
-
+      # Run SonarScanner using local tmp folder to fix permission denied
+      - run:
+          name: Run SonarScanner
+          command: |
+            cd "insy7314 part2 latest/international-payments/backend"
+            export TMPDIR=$PWD/.tmp
+            mkdir -p "$TMPDIR"
+            npx --yes --cache "$TMPDIR/.npm" --tmp "$TMPDIR" sonar-scanner@5.0.1.3006 \
+              -Dsonar.login="$SONAR_TOKEN"
 
 workflows:
   version: 2
