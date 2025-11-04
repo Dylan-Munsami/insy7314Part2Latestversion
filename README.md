@@ -117,7 +117,38 @@ Automated checks enforce that insecure code cannot move forward
 
 **POE Evidence Screenshot**
 
+
+#### CircleCI Main Pipeline Success
+![image alt](https://github.com/IdrisK825/insy7314Part2Latestversion/blob/00d67b156d08adaa3f0c7391b552dfc2b8b4d51e/circleci_main_pipeline_success.png.jpg)
+
+
+
+
+#### Pipeline History / Multiple Runs Successful
+
+![image alt](https://github.com/IdrisK825/insy7314Part2Latestversion/blob/00d67b156d08adaa3f0c7391b552dfc2b8b4d51e/circleci_pipeline_runs_list.jpg)
+
+#### Latest Pipeline Success (Re-run Verification)
+
+![image alt](https://github.com/IdrisK825/insy7314Part2Latestversion/blob/00d67b156d08adaa3f0c7391b552dfc2b8b4d51e/circleci_pipeline_success_last_run.jpg)
+
+
+#### CircleCI Build Steps
 ![image alt](https://github.com/IdrisK825/insy7314Part2Latestversion/blob/a65b6be2656be4b45892843413b4b92af7c49c1d/circleci_build_steps.jpg)
+
+
+#### Deep Step Detail
+![image alt](https://github.com/IdrisK825/insy7314Part2Latestversion/blob/00d67b156d08adaa3f0c7391b552dfc2b8b4d51e/circleci_step_expanded_1.jpg)
+
+
+#### GitHub Checks Passed
+![image alt](https://github.com/IdrisK825/insy7314Part2Latestversion/blob/00d67b156d08adaa3f0c7391b552dfc2b8b4d51e/github_checks_passed.jpg)
+
+
+
+#### SonarCloud Main Branch Passed
+![image alt](https://github.com/IdrisK825/insy7314Part2Latestversion/blob/00d67b156d08adaa3f0c7391b552dfc2b8b4d51e/sonarcloud_main_branch_passed.jpg)
+
 
 
 
